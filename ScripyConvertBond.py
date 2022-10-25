@@ -4,6 +4,7 @@ import pandas as pd
 import datetime
 from sqlConfig import *
 from scriptConfig import * 
+import time
 
 class scriptBase:
     '''爬虫基础类'''
