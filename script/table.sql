@@ -63,7 +63,18 @@ create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后一次修改时间'
 ) ENGINE=Innodb DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='可转债每日数据表'
 
+
+
 ;
+
+create table convert_bond_info (
+	bond_id int(30) comment 'id',
+	bond_nm varchar(30) comment '可转债名称',
+	create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+	update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后一次修改时间'
+) ENGINE=Innodb DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='可转债id名称表'
+;
+
 
 create table convert_bond_history (
 	bond_id int(30) comment 'id',
@@ -86,3 +97,45 @@ create table convert_bond_history (
 	create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 	update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后一次修改时间'
 )
+;
+
+alter table convert_bond_daily add column last_5d_rt varchar(30);
+alter table convert_bond_daily add column last_20d_rt varchar(30);
+alter table convert_bond_daily add column last_3m_rt varchar(30);
+alter table convert_bond_daily add column last_1y_rt varchar(30);
+alter table convert_bond_daily add column roe varchar(30);
+alter table convert_bond_daily add column dividend_rate varchar(30);
+alter table convert_bond_daily add column pe_temperature varchar(30);
+alter table convert_bond_daily add column pb_temperature varchar(30);
+alter table convert_bond_daily add column int_debt_rate varchar(30);
+alter table convert_bond_daily add column pledge_rt varchar(30);
+alter table convert_bond_daily add column market_value varchar(30);
+alter table convert_bond_daily add column revenue varchar(30);
+alter table convert_bond_daily add column revenue_growth varchar(30);
+alter table convert_bond_daily add column profit varchar(30);
+alter table convert_bond_daily add column profit_growth varchar(30);
+alter table convert_bond_daily add column bond_premium_rt varchar(30);
+alter table convert_bond_daily add column adjust_condition varchar(30);
+alter table convert_bond_daily add column sw_nm_r varchar(30);
+alter table convert_bond_daily add column volatility_rate varchar(30);
+alter table convert_bond_daily add column convert_amt_ratio2 varchar(30);
+alter table convert_bond_daily add column ytm_rt_tax varchar(30);
+alter table convert_bond_daily add column pct_rpt varchar(30);
+alter table convert_bond_daily add column total_market_value varchar(30);
+alter table convert_bond_daily add column redeem_price_total varchar(30);
+alter table convert_bond_daily add column redeem_status varchar(30);
+alter table convert_bond_daily add column province varchar(30);
+alter table convert_bond_daily add column sturnover_rt varchar(30);
+alter table convert_bond_daily add column pct_chg varchar(30);
+alter table convert_bond_daily add column adjust_status varchar(30);
+alter table convert_bond_daily add column unadj_cnt varchar(30);
+
+
+
+ALTER TABLE convert_bond_history ADD INDEX idx_date(date);
+ALTER TABLE convert_bond_history ADD INDEX idx_bond_id(bond_id);
+ALTER TABLE convert_bond_daily ADD INDEX idx_date(date);
+ALTER TABLE convert_bond_daily ADD INDEX idx_bond_id(bond_id);
+
+
+

@@ -89,18 +89,19 @@ class convertBondHistory(scriptBase):
         finish_data = finish_data.append(online,ignore_index=True)
         finish_data = finish_data.append(outline,ignore_index=True)
         now_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-        finish_data[['bond_id','bond_nm']].to_csv("debt_code.csv",index=False)
+        # finish_data[['bond_id','bond_nm']].to_csv("debt_code.csv",index=False)
+        finish_data[['bond_id','bond_nm']].to_sql('convert_bond_info', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
 
 
     def read_debt_code(self):
-        data = pd.read_csv('debt_code.csv')
+        # data = pd.read_csv('debt_code.csv')
+        data = pd.read_sql(sql='select bond_id,bond_nm from convert_bond_info', con=sqlExecute.engine)
         return data
 
     def get_convert_detail(self,id):
         # 爬明细数据
         url = 'https://www.jisilu.cn/data/cbnew/detail_hist/%s?___jsl=LST___t=1659969040759' % (id)
         response = requests.post(url=url, headers=scriptConfig.headers, cookies=scriptConfig.cookies,data=scriptConfig.data)
-        # print(response.json())
         return response.json()
 
     def standard_data(self,data):
@@ -162,6 +163,7 @@ class convertBondHistory(scriptBase):
 
     def run(self):
         self.init()
+        # self.read_debt_code()
 
 
 # if __name__ == '__main__':
