@@ -5,4 +5,4 @@
 
 
 
-python3 runHistory.py >> logs/history.log
+python3 runHistory.py >> logs/history.log &
