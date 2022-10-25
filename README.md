@@ -10,3 +10,4 @@ python3 runDaily.py
 
 ## 历史数据初始化
 python3 runHistory.py
+

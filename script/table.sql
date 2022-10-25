@@ -68,6 +68,7 @@ update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 create table convert_bond_history (
 	bond_id int(30) comment 'id',
 	`date` varchar(30) comment '日期', 
+	cflg varchar(30) comment 'cflg',
 	ytm_rt varchar(30) comment '到期税前收益率',
 	premium_rt varchar(30) comment '转股溢价率',
 	convert_value varchar(30) comment '转股价值',
@@ -77,6 +78,11 @@ create table convert_bond_history (
 	curr_iss_amt varchar(30) comment '剩余规模',
 	amt_change varchar(30) comment '',
 	turnover_rt varchar(30) comment '换手率',
+	cnt varchar(30) comment '',
+	end_dt varchar(30) comment '',
+	skip_dt varchar(30) comment '',
+	start_dt varchar(30) comment '',
+	type varchar(30) comment '',
 	create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 	update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后一次修改时间'
 )

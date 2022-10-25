@@ -88,7 +88,7 @@ class convertBondHistory(scriptBase):
         finish_data = finish_data.append(online,ignore_index=True)
         finish_data = finish_data.append(outline,ignore_index=True)
         now_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-        finish_data['bond_id'].to_csv("debt_code.csv",index=False)
+        finish_data[['bond_id','bond_nm']].to_csv("debt_code.csv",index=False)
 
 
     def read_debt_code(self):
@@ -119,11 +119,20 @@ class convertBondHistory(scriptBase):
         # 'amt_change'：
         # 'turnover_rt'：换手率
         # print(finish_data)
-        df.rename(columns={'last_chg_dt':'date'}, inplace = True)
+        rename_dict = {
+            'last_chg_dt':'date', 
+            '_cnt':'cnt', 
+            '_start_dt':'start_dt', 
+            '_end_dt':'end_dt', 
+            '_skip_dt': 'skip_dt', 
+            '_type': 'type', 
+            }
+        df.rename(columns=rename_dict, inplace = True)
         df['ytm_rt'] = df['ytm_rt'].apply(lambda x:x.split('%')[0])
         df['premium_rt'] = df['premium_rt'].apply(lambda x:x.split('%')[0])
 
-        return df[['bond_id','date','ytm_rt','premium_rt','price','convert_value','turnover_rt','volume','stock_volume','curr_iss_amt','amt_change']]
+
+        return df[['bond_id','date','ytm_rt','premium_rt','price','convert_value','turnover_rt','volume','stock_volume','curr_iss_amt','amt_change','cnt','end_dt','start_dt','skip_dt','type','cflg']]
 
 
 
@@ -137,9 +146,11 @@ class convertBondHistory(scriptBase):
         all_data = pd.DataFrame()
         self.get_all_convert_code() # 爬可转债代码，存到csv。
         debt_code = self.read_debt_code() # 读取已存csv的code数据
-        for num in range(20):# len(debt_code)
+        for num in range(len(debt_code)):# 
+            print("爬取第%s个转债" % (num))
             bond_id = debt_code.at[num,'bond_id']
             ori_data = self.get_convert_detail(bond_id) # 获取可转债数据明细
+            time.sleep(0.5)
             if self.if_data(ori_data): # 检查json数据是否合法
                 data = self.standard_data(ori_data) # 标准化数据
                 data.to_sql('convert_bond_history', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
