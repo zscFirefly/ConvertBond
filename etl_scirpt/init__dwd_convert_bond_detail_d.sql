@@ -1,6 +1,6 @@
 use convert_bond;
-truncate table dwd_convert_bond_detail_d;
-insert into dwd_convert_bond_detail_d
+truncate table convert_bond.dwd_convert_bond_detail_d;
+insert into convert_bond.dwd_convert_bond_detail_d
 select 
 bond_id
 , date
@@ -13,7 +13,7 @@ bond_id
 , turnover_rt
 , convert_value
 , now() etl_load_time
-from convert_bond_daily
+from convert_bond.convert_bond_daily
 union all 
 select 
 a.bond_id
@@ -27,6 +27,6 @@ a.bond_id
 , a.turnover_rt
 , a.convert_value
 , now() etl_load_time
-from convert_bond_history a 
-left join convert_bond_info b on a.bond_id = b.bond_id 
+from convert_bond.convert_bond_history a 
+left join convert_bond.convert_bond_info b on a.bond_id = b.bond_id 
 ;
