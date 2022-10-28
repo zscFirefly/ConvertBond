@@ -7,7 +7,7 @@ bond_id
 , bond_nm
 , price
 , premium_rt
-, ytm_rt
+, case when ytm_rt = '-' then null else ytm_rt end as ytm_rt
 , curr_iss_amt
 , volume
 , case when turnover_rt = '-' then null else turnover_rt end as turnover_rt
@@ -21,7 +21,7 @@ a.bond_id
 , b.bond_nm
 , a.price
 , a.premium_rt
-, a.ytm_rt
+, case when a.ytm_rt = '-' then null else a.ytm_rt end as ytm_rt
 , a.curr_iss_amt
 , a.volume
 , case when a.turnover_rt = '-' then null else a.turnover_rt end as turnover_rt
