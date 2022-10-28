@@ -1,4 +1,7 @@
 declare -r CURR_DIR=$(cd `dirname $0`;pwd)
+declare -r DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" 
+
+
 JOB_NAME=`basename $0 .sh`
 
 if [ $# -lt 1 ];then
@@ -6,4 +9,4 @@ if [ $# -lt 1 ];then
 	exit;
 fi
 
-python3 $CURR_DIR/sql-etl.py --file "$1"
+python3 $DIR/sql-etl.py --file "$1"
