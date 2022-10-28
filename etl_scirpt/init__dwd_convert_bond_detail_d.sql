@@ -10,7 +10,7 @@ bond_id
 , ytm_rt
 , curr_iss_amt
 , volume
-, turnover_rt
+, case when turnover_rt = '-' then null else turnover_rt end as turnover_rt
 , convert_value
 , now() etl_load_time
 from convert_bond.convert_bond_daily
@@ -24,7 +24,7 @@ a.bond_id
 , a.ytm_rt
 , a.curr_iss_amt
 , a.volume
-, a.turnover_rt
+, case when a.turnover_rt = '-' then null else a.turnover_rt end as turnover_rt
 , a.convert_value
 , now() etl_load_time
 from convert_bond.convert_bond_history a 
