@@ -46,14 +46,18 @@ def executor(sql):
     db = pymysql.connect(host=sqlConfig.db_host,port=sqlConfig.db_port,user=sqlConfig.db_user,password=sqlConfig.db_passwd,database=sqlConfig.db_name)     
     cursor = db.cursor()
     print(sql)
-    try:
-        cursor.execute(sql)
-        results = cursor.fetchall()
-        print(results)
-    except pymysql.Error as e:
-        print("Error: unable to execute")
-    finally:
-        db.close()
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    print(results)
+    db.close()
+    # try:
+    #     cursor.execute(sql)
+    #     results = cursor.fetchall()
+    #     print(results)
+    # except pymysql.Error as e:
+    #     print("Error: unable to execute")
+    # finally:
+    #     db.close()
     pass
 
 

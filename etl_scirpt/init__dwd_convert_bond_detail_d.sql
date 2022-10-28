@@ -5,13 +5,13 @@ select
 bond_id
 , date
 , bond_nm
-, price
+, case when price = '-' then null else price end as price
 , premium_rt
 , case when ytm_rt = '-' then null else ytm_rt end as ytm_rt
 , curr_iss_amt
 , volume
 , case when turnover_rt = '-' then null else turnover_rt end as turnover_rt
-, convert_value
+, case when convert_value = '-' then null else convert_value end as convert_value
 , now() etl_load_time
 from convert_bond.convert_bond_daily
 union all 
@@ -19,13 +19,13 @@ select
 a.bond_id
 , a.date
 , b.bond_nm
-, a.price
+, case when a.price = '-' then null else a.price end as price
 , a.premium_rt
 , case when a.ytm_rt = '-' then null else a.ytm_rt end as ytm_rt
 , a.curr_iss_amt
 , a.volume
 , case when a.turnover_rt = '-' then null else a.turnover_rt end as turnover_rt
-, a.convert_value
+, case when a.convert_value = '-' then null else a.convert_value end as convert_value
 , now() etl_load_time
 from convert_bond.convert_bond_history a 
 left join convert_bond.convert_bond_info b on a.bond_id = b.bond_id 
