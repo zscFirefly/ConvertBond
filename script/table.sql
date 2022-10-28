@@ -139,3 +139,22 @@ ALTER TABLE convert_bond_daily ADD INDEX idx_bond_id(bond_id);
 
 
 
+
+
+
+
+create table dwd_convert_bond_detail_d (
+	bond_id int(30) comment 'id',
+	`date` date comment '日期', 
+	bond_nm varchar(30) comment '可转债名称',
+	price decimal(18,4) comment '可转债价格',
+	premium_rt decimal(18,4) comment '可转债溢价率',
+	ytm_rt decimal(18,4) comment '到期税前收益率',
+	curr_iss_amt decimal(30,4) comment '剩余规模',
+	volume decimal(30,4) comment '成交额',
+	turnover_rt decimal(30,4) comment '换手率',
+	convert_value decimal(30,4) comment '转股价值',
+	etl_load_time timestamp comment '数据加工时间'
+)ENGINE=Innodb DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='可转债数据明细表'
+
+;

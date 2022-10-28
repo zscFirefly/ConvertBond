@@ -59,6 +59,7 @@ class convertBondDaily(scriptBase):
     '''每日数据获取类'''
     def daily(self):
         finish_data = self.get_convert_code('online')
+        print(finish_data)
         now_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         date = datetime.datetime.now().strftime('%Y-%m-%d')
         finish_data['date'] = date
