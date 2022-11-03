@@ -15,4 +15,3 @@ bond_id
 , now() etl_load_time
 from convert_bond.convert_bond_daily
 where date = CURRENT_DATE
-;
