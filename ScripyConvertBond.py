@@ -6,14 +6,8 @@ from sqlConfig import *
 from scriptConfig import * 
 import time
 
-class scriptBase():
+class scriptBase:
     '''爬虫基础类'''
-    def __init__(self):
-        self.scriptConfig = None
-
-    def set_script_config(self,scriptConfig):
-        self.scriptConfig = scriptConfig
-
 
     def util_to_df(self,debt_json):
         ## 将获取下来的数据由json转化为dataframe
@@ -49,7 +43,7 @@ class scriptBase():
         '''
         dept_type = {'online':'list_new','outline':'delisted'}
         url = 'https://www.jisilu.cn/webapi/cb/%s/' % (dept_type[dtype])
-        response = requests.post(url=url, headers=self.scriptConfig.get_headers(), cookies=self.scriptConfig.get_cookies())
+        response = requests.post(url=url, headers=scriptConfig.headers, cookies=scriptConfig.cookies)
         debt_json = response.json()['data']
         df = self.util_to_df(debt_json)
         return df
@@ -62,9 +56,6 @@ class scriptBase():
 
 
 class convertBondDaily(scriptBase):
-    # def __init__(self):
-    #     super(scriptBase, self).__init__()
-
     '''每日数据获取类'''
     def daily(self):
         finish_data = self.get_convert_code('online')
@@ -88,13 +79,8 @@ class convertBondDaily(scriptBase):
     def run(self):
         self.daily()
 
-        
 
 class convertBondHistory(scriptBase):
-    # def __init__(self):
-    #     super(scriptBase, self).__init__()
-
-
 
     def get_all_convert_code(self):
         '''重写获取可转债代码方法，'''
@@ -116,7 +102,7 @@ class convertBondHistory(scriptBase):
     def get_convert_detail(self,id):
         # 爬明细数据
         url = 'https://www.jisilu.cn/data/cbnew/detail_hist/%s?___jsl=LST___t=1659969040759' % (id)
-        response = requests.post(url=url, headers=self.scriptConfig.get_headers(), cookies=self.scriptConfig.get_cookies(),data=self.scriptConfig.get_data())
+        response = requests.post(url=url, headers=scriptConfig.headers, cookies=scriptConfig.cookies,data=scriptConfig.data)
         return response.json()
 
     def standard_data(self,data):
