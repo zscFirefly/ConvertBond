@@ -1,12 +1,12 @@
 import requests
-from scriptConfig import scriptConfig
+from script_config import ScriptConfig
 
 
-class userLogin():
-    def __init__(self,scriptConfig):
-        self.scriptConfig = scriptConfig
+class UserLogin():
+    def __init__(self,script_config):
+        self.script_config = script_config
 
-    def get_login_info(self):
+    def login(self):
 
         data = {
             'return_url': 'https://www.jisilu.cn/',
@@ -15,7 +15,7 @@ class userLogin():
         }
         url = 'https://www.jisilu.cn/webapi/account/login_process/'
 
-        response = requests.post(url=url, headers=self.scriptConfig.get_headers(), data=data)
+        response = requests.post(url=url, headers=self.script_config.get_headers(), data=data)
 
         login_info = response.cookies.get_dict()
         print("login in info ==> " + str(login_info))
@@ -23,17 +23,17 @@ class userLogin():
         return login_info
 
 
-    def activate(self,login_info):
+    def activate_session(self,login_info):
         url = 'https://www.jisilu.cn/'
-        response = requests.get(url=url, cookies=login_info, headers=self.scriptConfig.get_headers())
+        response = requests.get(url=url, cookies=login_info, headers=self.script_config.get_headers())
         print("activate status ==> " + str(response.status_code))
 
 
 if __name__ == '__main__':
-    sc = scriptConfig()
-    us = userLogin(sc)
-    login_info = us.get_login_info()
-    us.activate(login_info)
+    sc = ScriptConfig()
+    us = UserLogin(sc)
+    login_info = us.login()
+    us.activate_session(login_info)
     sc.set_session(login_info['kbzw__Session'])
     sc.set_user_login(login_info['kbzw__user_login'])
     print(sc.get_cookies())

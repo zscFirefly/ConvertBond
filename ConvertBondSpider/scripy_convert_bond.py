@@ -2,17 +2,17 @@
 import requests
 import pandas as pd
 import datetime
-from sqlConfig import *
-from scriptConfig import * 
+from sql_config import *
+from script_config import * 
 import time
 
-class scriptBase():
+class ScriptBase():
     '''爬虫基础类'''
     def __init__(self):
-        self.scriptConfig = None
+        self.script_config = None
 
-    def set_script_config(self,scriptConfig):
-        self.scriptConfig = scriptConfig
+    def set_script_config(self,script_config):
+        self.script_config = script_config
 
 
     def util_to_df(self,debt_json):
@@ -49,7 +49,7 @@ class scriptBase():
         '''
         dept_type = {'online':'list_new','outline':'delisted'}
         url = 'https://www.jisilu.cn/webapi/cb/%s/' % (dept_type[dtype])
-        response = requests.post(url=url, headers=self.scriptConfig.get_headers(), cookies=self.scriptConfig.get_cookies())
+        response = requests.post(url=url, headers=self.script_config.get_headers(), cookies=self.script_config.get_cookies())
         debt_json = response.json()['data']
         df = self.util_to_df(debt_json)
         return df
@@ -61,10 +61,7 @@ class scriptBase():
         pass
 
 
-class convertBondDaily(scriptBase):
-    # def __init__(self):
-    #     super(scriptBase, self).__init__()
-
+class ConvertBondDaily(ScriptBase):
     '''每日数据获取类'''
     def daily(self):
         finish_data = self.get_convert_code('online')
@@ -90,11 +87,8 @@ class convertBondDaily(scriptBase):
 
         
 
-class convertBondHistory(scriptBase):
-    # def __init__(self):
-    #     super(scriptBase, self).__init__()
-
-
+class ConvertBondHistory(ScriptBase):
+    '''爬历史数据类'''
 
     def get_all_convert_code(self):
         '''重写获取可转债代码方法，'''
@@ -116,7 +110,7 @@ class convertBondHistory(scriptBase):
     def get_convert_detail(self,id):
         # 爬明细数据
         url = 'https://www.jisilu.cn/data/cbnew/detail_hist/%s?___jsl=LST___t=1659969040759' % (id)
-        response = requests.post(url=url, headers=self.scriptConfig.get_headers(), cookies=self.scriptConfig.get_cookies(),data=self.scriptConfig.get_data())
+        response = requests.post(url=url, headers=self.script_config.get_headers(), cookies=self.script_config.get_cookies(),data=self.script_config.get_data())
         return response.json()
 
     def standard_data(self,data):
@@ -182,7 +176,7 @@ class convertBondHistory(scriptBase):
 
 
 # if __name__ == '__main__':
-#     cb = convertBondDaily()
+#     cb = ConvertBondDaily()
 #     cb.run()
-    # cb = convertBondHistory()
+    # cb = ConvertBondHistory()
     # cb.run()

@@ -1,4 +1,4 @@
-from ScripyConvertBond import convertBondHistory
+from ScripyConvertBond import ConvertBondHistory
 
 
 if __name__ == '__main__':
@@ -6,9 +6,9 @@ if __name__ == '__main__':
     # cb.run()
 
 
-    sc = scriptConfig() # 实例化配置对象
+    sc = ScriptConfig() # 实例化配置对象
 
-    us = userLogin(sc) # 实例化用户登陆对象
+    us = UserLogin(sc) # 实例化用户登陆对象
     login_info = us.get_login_info() # 获取登陆账号及登陆session
     us.activate(login_info) # 激活session
     sc.set_session(login_info['kbzw__Session']) # 更新配置对象cookies

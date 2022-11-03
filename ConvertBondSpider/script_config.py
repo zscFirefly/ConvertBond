@@ -1,6 +1,6 @@
 
 
-class scriptConfig():
+class ScriptConfig():
     '''爬虫cookies信息配置'''
     def __init__(self):
         self.session = None
