@@ -7,7 +7,7 @@
   - **run_daily.py** 每日爬可转债数据代码入口
   - **run_history.py** 获取历史所有可转债数据代码
   - **monitor_daily.py** 日常监控可转债信息代码入口
-- **etl_scirpt：**ETL数据处理脚本【为后期数仓准备】
+- **etl_scirpt：** ETL数据处理脚本【为后期数仓准备】
 - **opt：** 小工具文件夹，一个sql-etl的命令脚本。【为后期数仓准备】
 - **script：** 项目初始化数据库脚本
 
