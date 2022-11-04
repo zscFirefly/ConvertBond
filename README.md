@@ -29,7 +29,9 @@ source ~/.bash_profile
 ln -s sql-etl.sh sql-etl
 ```
 
-
+## 项目难点
+1. 集思录登陆：调用登陆接口，换取session后，需要调用主页接口才能激活session，用session去调用可转债列表数据。
+2. 飞书调用群消息接口：需要创建应用，启动机器人，获取用户id。参考链接：https://blog.csdn.net/viviliving/article/details/121589128
 
 ## 备份笔记
 git config --global --unset http.proxy # 取消git代理
