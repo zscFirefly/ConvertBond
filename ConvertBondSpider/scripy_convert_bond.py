@@ -99,12 +99,12 @@ class ConvertBondHistory(ScriptBase):
         finish_data = finish_data.append(outline,ignore_index=True)
         now_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         # finish_data[['bond_id','bond_nm']].to_csv("debt_code.csv",index=False)
-        finish_data[['bond_id','bond_nm']].to_sql('convert_bond_info', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+        finish_data[['bond_id','bond_nm']].to_sql('tmp_convert_bond_info', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
 
 
     def read_debt_code(self):
         # data = pd.read_csv('debt_code.csv')
-        data = pd.read_sql(sql='select bond_id,bond_nm from convert_bond_info', con=sqlExecute.engine)
+        data = pd.read_sql(sql='select bond_id,bond_nm from tmp_convert_bond_info', con=sqlExecute.engine)
         return data
 
     def get_convert_detail(self,id):
@@ -148,9 +148,10 @@ class ConvertBondHistory(ScriptBase):
 
 
     def init(self):
+        table_name = 'tmp_convert_bond_history'
         now_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         FILE_NAME = "debt_detail"+now_time+".csv" # 文件名称
-        sql = 'truncate table convert_bond_history;'
+        sql = 'truncate table %s;' % (table_name)
         with sqlExecute.engine.connect() as connect:
             connect.execute(sql)
 
@@ -164,7 +165,7 @@ class ConvertBondHistory(ScriptBase):
             time.sleep(0.5)
             if self.if_data(ori_data): # 检查json数据是否合法
                 data = self.standard_data(ori_data) # 标准化数据
-                data.to_sql('convert_bond_history', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+                data.to_sql(table_name, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
                 # all_data = all_data.append(data,ignore_index=True)
                 # all_data.to_csv(FILE_NAME,index=False)
             else:

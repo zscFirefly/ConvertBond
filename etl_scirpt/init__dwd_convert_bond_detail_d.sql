@@ -14,6 +14,7 @@ bond_id
 , case when convert_value = '-' then null else convert_value end as convert_value
 , now() etl_load_time
 from convert_bond.convert_bond_daily
+where date > '2022-11-02'
 union all 
 select 
 a.bond_id
@@ -29,4 +30,5 @@ a.bond_id
 , now() etl_load_time
 from convert_bond.convert_bond_history a 
 left join convert_bond.convert_bond_info b on a.bond_id = b.bond_id 
+where a.date <= '2022-11-02'
 ;
