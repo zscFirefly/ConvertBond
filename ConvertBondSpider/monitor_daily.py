@@ -18,7 +18,7 @@ def main():
 
     # 构造消息体
     date = datetime.datetime.now().strftime("%Y-%m-%d")
-    message = message % (date, df.at[0,'avg_price'], df.at[0,'avg_premium_rt'], df.at[0,'avg_double'])
+    message = message % (date, df.at[0,'avg_double'], df.at[0,'avg_price'], df.at[0,'avg_premium_rt'])
     
     # 构造飞书配置实例
     fc = FeishuConfig()
