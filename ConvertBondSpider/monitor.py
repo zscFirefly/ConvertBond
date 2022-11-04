@@ -5,7 +5,7 @@ from sql_config import *
 import datetime
 
 class FeishuConfig():
-	'''飞书配置类'''
+    '''飞书配置类'''
     def __init__(self):
         self.app_id = None
         self.app_secret = None
@@ -30,7 +30,7 @@ class FeishuConfig():
 
 
 class SearchData():
-	'''sql查询类'''
+    '''sql查询类'''
     def __init__(self,sql):
         self.sql = sql
 
@@ -40,7 +40,7 @@ class SearchData():
 
 
 class Monitor():
-	'''监控类'''
+    '''监控类'''
     def __init__(self,config):
         self.config = config
 

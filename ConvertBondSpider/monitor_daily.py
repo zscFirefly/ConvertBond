@@ -3,7 +3,7 @@ from monitor import *
 
 
 def main():
-	message = '%s可转债数据：\n双低均值：%s\n价格均值：%s\n溢价率均值：%s'
+    message = '%s可转债数据：\n双低均值：%s\n价格均值：%s\n溢价率均值：%s'
     sql = '''
     select round(avg(price),2) as avg_price
     ,round(avg(premium_rt),2) as avg_premium_rt
@@ -34,7 +34,7 @@ def main():
 
 
 if __name__ == '__main__':
-	main()
+    main()
     # app_id = 'cli_a3ee5eca19b9900d'
     # app_secret = 'sSjQawQabi0sdODSiCxoggeMLhNEWnq7'
     # user_id = '41a6a2ba'
