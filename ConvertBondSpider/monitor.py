@@ -2,7 +2,9 @@ import json
 import requests
 import pandas as pd 
 from sql_config import *
+from search_data import SearchData
 import datetime
+
 
 class FeishuConfig():
     '''飞书配置类'''
@@ -28,15 +30,6 @@ class FeishuConfig():
     def set_open_id(self,open_id):
         self.open_id = open_id
 
-
-class SearchData():
-    '''sql查询类'''
-    def __init__(self,sql):
-        self.sql = sql
-
-    def read_data(self):
-        data = pd.read_sql(self.sql, sqlExecute.engine)
-        return data
 
 
 class Monitor():

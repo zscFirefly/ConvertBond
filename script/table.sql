@@ -158,3 +158,87 @@ create table dwd_convert_bond_detail_d (
 )ENGINE=Innodb DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='可转债数据明细表'
 
 ;
+
+
+
+CREATE TABLE `dim_date` (  
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `day_id` varchar(10) DEFAULT NULL,     
+  `day_short_desc` varchar(10) DEFAULT NULL,  
+  `day_long_desc` varchar(50) DEFAULT NULL,  
+  `week_desc` varchar(20) DEFAULT NULL,  
+  `week_id` varchar(20) DEFAULT NULL,  
+  `week_long_desc` varchar(50) DEFAULT NULL,  
+  `month_id` varchar(20) DEFAULT NULL,  
+  `month_long_desc` varchar(50) DEFAULT NULL,  
+  `quarter_id` varchar(20) DEFAULT NULL,  
+  `quarter_long_desc` varchar(20) DEFAULT NULL,  
+  `year_id` varchar(20) DEFAULT NULL,  
+  `year_long_desc` varchar(50) DEFAULT NULL,  
+  PRIMARY KEY (`id`)  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE PROCEDURE `f_dim_date`(in yr VARCHAR(20))
+begin  
+declare i int;
+declare start_date varchar(20);
+declare end_date varchar(20);
+declare date_count int;
+
+    set i=0;  
+        set start_date= concat(yr, '-01-01');
+        set end_date = concat(yr+1,'-01-01');
+    DELETE from dim_date where year_id = yr;
+        set date_count = datediff(end_date, start_date);
+        
+    while i < date_count DO  
+        INSERT into dim_date (day_id,day_short_desc,day_long_desc,week_desc,week_id,week_long_desc,month_id,month_long_desc,quarter_id,quarter_long_desc,year_id,year_long_desc)  
+            SELECT  
+                            DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y%m%d') day_id,  
+                DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y-%m-%d') day_short_desc,  
+                DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y年%m月%d日') day_long_desc,  
+                case dayOFweek(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'))  when 1 then '星期日' when 2 then '星期一' when 3 then '星期二' when 4 then '星期三' when 5 then '星期四' when 6 then '星期五' when 7 then '星期六' end week_desc,  
+                DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y%u') week_id,  
+                DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y年第%u周') week_long_desc,  
+                DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y%m') month_id,  
+                DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y年第%m月') month_long_desc,  
+                CONCAT(DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y'),quarter(STR_TO_DATE( start_date,'%Y-%m-%d %H:%i:%s'))) quarter_id,  
+                CONCAT(DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y'),'年第',quarter(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s')),'季度') quarter_long_desc,  
+                DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y') year_id,  
+                DATE_FORMAT(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),'%Y年') year_long_desc  
+        from dual;  
+        set i=i+1;  
+        set start_date = DATE_FORMAT(date_add(STR_TO_DATE(start_date,'%Y-%m-%d %H:%i:%s'),interval 1 day),'%Y-%m-%d');  
+    end while;  
+end
+;
+
+call f_dim_date('2013');
+call f_dim_date('2014');
+call f_dim_date('2015');
+call f_dim_date('2016');
+call f_dim_date('2017');
+call f_dim_date('2018');
+call f_dim_date('2019');
+call f_dim_date('2020');
+call f_dim_date('2021');
+call f_dim_date('2022');
+call f_dim_date('2023');
+
+alter table `dim_date` add column is_work tinyint;
+alter table `dim_date` add column is_holiday tinyint;
+alter table `dim_date` add column is_caculate tinyint;
+
+
+update dim_date set is_holiday=0;
+update dim_date set is_holiday=1
+where day_short_desc in ('2022-01-01','2022-01-02','2022-01-03','2022-01-31','2022-02-01','2022-02-02'
+    ,'2022-02-03','2022-02-04','2022-02-05','2022-02-06','2022-04-03','2022-04-04','2022-04-05'
+    ,'2022-04-30','2022-05-01','2022-05-02','2022-05-03','2022-05-04','2022-06-03','2022-06-04'
+    ,'2022-06-05','2022-09-10','2022-09-11','2022-09-12','2022-10-01','2022-10-02','2022-10-03'
+    ,'2022-10-04','2022-10-05','2022-10-06','2022-10-07');
+update dim_date set is_work=1 where week_desc in ('星期一','星期二','星期三','星期四','星期五') and is_holiday = 0;
+update dim_date set is_work=0 where week_desc in ('星期六','星期日') or is_holiday=1;
+

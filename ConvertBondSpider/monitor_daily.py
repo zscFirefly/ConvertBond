@@ -1,5 +1,7 @@
 from monitor import *
-
+import datetime
+from calender import Calender
+from search_data import SearchData
 
 
 def main():
@@ -34,6 +36,15 @@ def main():
 
 
 if __name__ == '__main__':
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
+    # 判断是否为交易日，如果不为交易日，则不必执行
+    ca = Calender(date)
+    is_work = ca.get_is_work()
+    if is_work == 0:
+        print("今日%s，非交易日" % (date))
+        exit()
+
+    # 执行代码
     main()
     # app_id = 'cli_a3ee5eca19b9900d'
     # app_secret = 'sSjQawQabi0sdODSiCxoggeMLhNEWnq7'
