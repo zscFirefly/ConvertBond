@@ -12,3 +12,7 @@ class SearchData():
     def read_data(self):
         data = pd.read_sql(self.sql, sqlExecute.engine)
         return data
+
+    def write_data(self,dataframe,tablename):
+        dataframe.to_sql(tablename, sqlExecute.engine,if_exists='append')
+        return 0

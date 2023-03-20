@@ -233,6 +233,8 @@ alter table `dim_date` add column is_work tinyint;
 alter table `dim_date` add column is_holiday tinyint;
 alter table `dim_date` add column is_caculate tinyint;
 
+alter table `dim_date` add column is_change tinyint;
+
 
 update dim_date set is_holiday=0;
 update dim_date set is_holiday=1
@@ -244,3 +246,26 @@ where day_short_desc in ('2022-01-01','2022-01-02','2022-01-03','2022-01-31','20
 update dim_date set is_work=1 where week_desc in ('星期一','星期二','星期三','星期四','星期五') and is_holiday = 0;
 update dim_date set is_work=0 where week_desc in ('星期六','星期日') or is_holiday=1;
 
+
+
+
+update dim_date set is_work = 0 where day_id in ('20210101','20210102','20210103','20210211','20210212','20210213','20210214','20210215','20210216','20210217','20210403','20210404','20210405','20210501','20210502','20210503','20210504','20210505','20210612','20210613','','20210614','20210919','20210920','20210921','20211001','20211002','20211003','20211004','20211005','20211006','20211007')
+
+
+create table convert_bond_loopback (
+  bond_id int(30) comment 'id',
+  `date` date comment '日期', 
+  ytm_rt varchar(30) comment '到期税前收益率',
+  premium_rt varchar(30) comment '转股溢价率',
+  price varchar(30) comment '收盘价',
+  rn int comment '序列号',
+  create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后一次修改时间'
+)
+;
+
+
+
+
+ALTER TABLE convert_bond_loopback ADD INDEX idx_date(date);
+ALTER TABLE convert_bond_loopback ADD INDEX idx_bond_id(bond_id);

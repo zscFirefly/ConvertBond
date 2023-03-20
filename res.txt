@@ -1,0 +1,47 @@
+
+0.8*premium_rt+1.2*price 20 只买小于130 97740.9
+1.0*premium_rt+1.0*price 20 只买小于130 96969.5
+1.2*premium_rt+0.8*price 20 只买小于130 95442.8
+
+
+
+0.8*premium_rt+1.2*price 15 只买小于130 97947.54
+1.0*premium_rt+1.0*price 15 只买小于130 95021.1
+1.2*premium_rt+0.8*price 15 只买小于130 96532.4
+
+0.8*premium_rt+1.2*price+1.0*ytm_rt 15 只买小于130 98897.60
+1.0*premium_rt+1.0*price+1.0*ytm_rt 15 只买小于130 95850.7
+1.2*premium_rt+0.8*price+1.0*ytm_rt 15 只买小于130 97381.9
+
+0.8*premium_rt+1.2*price+1.2*ytm_rt 20 只买小于130 97027.3
+1.0*premium_rt+1.0*price+1.2*ytm_rt 20 只买小于130 96961.6
+1.2*premium_rt+0.8*price+1.2*ytm_rt 20 只买小于130 96069.5
+
+0.8*premium_rt+1.2*price+1.0*ytm_rt 20 只买小于130 98582.95
+1.0*premium_rt+1.0*price+1.0*ytm_rt 20 只买小于130 96422.7
+1.2*premium_rt+0.8*price+1.0*ytm_rt 20 只买小于130 96069.5
+
+0.8*premium_rt+1.2*price+1.2*ytm_rt 15 只买小于130 97934.15
+1.0*premium_rt+1.0*price+1.2*ytm_rt 15 只买小于130 96753.1
+1.2*premium_rt+0.8*price+1.2*ytm_rt 15 只买小于130 96981.5
+
+
+
+
+2021
+0.8*premium_rt+1.2*price+1.0*ytm_rt 15 只买小于130 114478.86999999988	
+
+
+1.2*premium_rt+0.8*price 20 只买小于130 121362.34999999971
+
+1.0*premium_rt+1.0*price+1.0*ytm_rt 15 只买小于130 111907.7699999998
+
+
+114246
+
+1.0*premium_rt+1.0*price+1.2*ytm_rt 20 只买小于130 138024.74 140147.19 91514.45
+0.8*premium_rt+1.2*price+1.0*ytm_rt 15 只买小于130 145405.42 147987.67 92151.47
+0.8*premium_rt+1.2*price+1.0*ytm_rt 20 只买小于130 145073.94 148151.41 92153.88
+
+
+145073.94

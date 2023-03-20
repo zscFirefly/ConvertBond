@@ -50,8 +50,10 @@ class ScriptBase():
         爬取可转债主页信息
         online：cb_list、outline：delisted
         '''
-        dept_type = {'online':'list_new','outline':'delisted'}
+        # dept_type = {'online':'list_new','outline':'delisted'}
+        dept_type = {'online':'list','outline':'delisted'}
         url = 'https://www.jisilu.cn/webapi/cb/%s/' % (dept_type[dtype])
+        print(self.script_config.get_headers())
         response = requests.post(url=url, headers=self.script_config.get_headers(), cookies=self.script_config.get_cookies())
         debt_json = response.json()['data']
         df = self.util_to_df(debt_json)
@@ -102,12 +104,12 @@ class ConvertBondHistory(ScriptBase):
         finish_data = finish_data.append(outline,ignore_index=True)
         now_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         # finish_data[['bond_id','bond_nm']].to_csv("debt_code.csv",index=False)
-        finish_data[['bond_id','bond_nm']].to_sql('tmp_convert_bond_info', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+        finish_data[['bond_id','bond_nm']].to_sql('tmp_convert_bond_info_0320', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
 
 
     def read_debt_code(self):
         # data = pd.read_csv('debt_code.csv')
-        data = pd.read_sql(sql='select bond_id,bond_nm from tmp_convert_bond_info', con=sqlExecute.engine)
+        data = pd.read_sql(sql='select bond_id,bond_nm from tmp_convert_bond_info_0320', con=sqlExecute.engine)
         return data
 
     def get_convert_detail(self,id):
@@ -151,12 +153,12 @@ class ConvertBondHistory(ScriptBase):
 
 
     def init(self):
-        table_name = 'tmp_convert_bond_history'
-        now_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-        FILE_NAME = "debt_detail"+now_time+".csv" # 文件名称
-        sql = 'truncate table %s;' % (table_name)
-        with sqlExecute.engine.connect() as connect:
-            connect.execute(sql)
+        table_name = 'tmp_convert_bond_history_0320'
+        # now_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        # FILE_NAME = "debt_detail"+now_time+".csv" # 文件名称
+        # sql = 'truncate table %s;' % (table_name)
+        # with sqlExecute.engine.connect() as connect:
+        #     connect.execute(sql)
 
         all_data = pd.DataFrame()
         self.get_all_convert_code() # 爬可转债代码，存到csv。
@@ -179,8 +181,10 @@ class ConvertBondHistory(ScriptBase):
         # self.read_debt_code()
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 #     cb = ConvertBondDaily()
 #     cb.run()
-    # cb = ConvertBondHistory()
-    # cb.run()
+    sc = ScriptConfig()
+    cb = ConvertBondHistory()
+    cb.set_script_config(sc)
+    cb.run()

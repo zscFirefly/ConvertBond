@@ -11,7 +11,7 @@ from common.search_data import SearchData
 
 
 def main():
-    message = '%s可转债数据：\n双低均值：%s\n价格均值：%s\n溢价率均值：%s'
+    message = '%s可转债整体数据：\n双低均值：%s\n价格均值：%s\n溢价率均值：%s'
     sql = '''
     select round(avg(price),2) as avg_price
     ,round(avg(premium_rt),2) as avg_premium_rt
@@ -35,8 +35,8 @@ def main():
     fc.set_app_secret('sSjQawQabi0sdODSiCxoggeMLhNEWnq7')
 
     # 构造监控实例
-    mo = Monitor(fc)
-    mo.send_message(message) # 发送消息
+    fs = FeiShu(fc)
+    fs.send_message(message) # 发送消息
 
 
 

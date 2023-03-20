@@ -6,76 +6,9 @@ import pandas as pd
 import datetime
 
 from conf.sql_config import *
+from conf.feishu_config import *
 from common.search_data import SearchData
-
-
-class FeishuConfig():
-    '''飞书配置类'''
-    def __init__(self):
-        self.app_id = None
-        self.app_secret = None
-        self.user_id = None
-        self.union_id = None
-        self.open_id = None
-
-    def set_app_id(self,app_id):
-        self.app_id = app_id
-
-    def set_app_secret(self,app_secret):
-        self.app_secret = app_secret
-
-    def set_user_id(self,user_id):
-        self.user_id = user_id
-
-    def set_union_id(self,union_id):
-        self.union_id = union_id
-
-    def set_open_id(self,open_id):
-        self.open_id = open_id
-
-
-
-class Monitor():
-    '''监控类'''
-    def __init__(self,config):
-        self.config = config
-
-    def get_tenant_access_token(self):
-        url = 'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal'
-        data = {
-            'app_id': self.config.app_id,
-            'app_secret': self.config.app_secret
-        }
-
-        headers = {
-            'Content-Type': 'application/json; charset=utf-8',        
-        }
-        res= requests.post(url, params=data, headers=headers).json() 
-        print(res) 
-        return res['tenant_access_token']
-
-
-    def send_message(self, text):
-        url = "https://open.feishu.cn/open-apis/message/v4/send/"     
-        access_token = self.get_tenant_access_token()
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + access_token
-        }
-        req_body = {
-            "user_id": self.config.user_id,
-            "msg_type": "text",
-            "content": {
-                "text": text
-            }
-        }
-     
-        data = json.dumps(req_body) # 转化为str
-        req = requests.post(url=url, data=data, headers=headers)
-        print(req.json())
-
- 
-
+from common.feishu import FeiShu
 
 
 
@@ -108,7 +41,7 @@ if __name__ == '__main__':
     fc.set_app_id('cli_a3ee5eca19b9900d')
     fc.set_app_secret('sSjQawQabi0sdODSiCxoggeMLhNEWnq7')
 
-    mo = Monitor(fc)
-    mo.send_message(message)
+    fs = FeiShu(fc)
+    fs.send_message(message)
 
 
