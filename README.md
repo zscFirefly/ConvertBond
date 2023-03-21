@@ -37,3 +37,6 @@ ln -s sql-etl.sh sql-etl
 git config --global --unset http.proxy # 取消git代理
 git config --global --unset https.proxy # 取消git代理
 git config --global http.postBuffer 50M # 取消git带宽
+
+git config core.ignorecase false # 取消大小写敏感
+
