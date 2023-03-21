@@ -2,9 +2,50 @@
 <html>
 <head>
 	<title>查询结果</title>
+	<style>
+		h1 {
+			font-size: 32px;
+			color: #333;
+			text-align: center;
+			margin-top: 50px;
+		}
+		table {
+			border-collapse: collapse;
+			width: 80%;
+			margin: 0 auto;
+			margin-top: 50px;
+			box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+		}
+		th, td {
+			border: 1px solid #ccc;
+			padding: 10px;
+			text-align: center;
+			/*text-align: left;*/
+		}
+		th {
+			background-color: #eee;
+			font-weight: bold;
+		}
+		button {
+			float: center;
+			margin-top: -40px;
+			/*margin-right: -10px;*/
+			padding: 10px 20px;
+			font-size: 12px;
+			border-radius: 5px;
+			background-color: #007bff;
+			color: #fff;
+			border: none;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+		button:hover {
+			background-color: #0069d9;
+		}
+	</style>
 </head>
 <body>
-	<h1>查询结果</h1>
+	<h1>查询结果   <button onclick="window.history.back()">返回</button></h1>
 	{{ table|safe }}
 </body>
 </html>

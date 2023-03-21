@@ -18,7 +18,7 @@ def get_data(bond_id):
         'mysql+pymysql://%(user)s:%(password)s@%(host)s:%(port)d/%(database)s?charset=utf8' % db_info,
         encoding='utf-8'
     )
-    sql = ''' select date,bond_id,bond_nm,price,increase_rt,premium_rt,year_left,ytm_rt from convert_bond_daily where bond_id = '%s' ''' % (bond_id)
+    sql = ''' select date,bond_id,bond_nm,price,increase_rt,premium_rt,year_left,ytm_rt from convert_bond_daily where bond_id = '%s' order by date desc''' % (bond_id)
     data = pd.read_sql(sql, engine)
     columns={"date": "日期", "bond_id": "转债代码", "bond_nm": "转债名称", "price": "价格", "premium_rt": "溢价率", "year_left": "到期时间", "ytm_rt": "到期税前收益率", "increase_rt": "涨幅"}
 
@@ -53,4 +53,5 @@ def search():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',debug=True)
+    app.run(debug=True)
+    # app.run(host='0.0.0.0',debug=True)
