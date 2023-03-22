@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import pandas as pd
 from sqlalchemy import create_engine
 import logging
+import datetime
 
 app = Flask(__name__)
 
@@ -47,7 +48,9 @@ def search():
     # 获取用户输入的城市名称
     bond_id = request.form['bond_id']
 
-    app.logger.info(f'logging >>>>> Search request from {ip_address} for bond_id: {bond_id}')
+    dt = datetime.datetime.now()
+
+    app.logger.info(f'{dt} logging > Search request from {ip_address} for bond_id: {bond_id}')
     
     # 从CSV文件中读取数据
     # data = pd.read_csv('data.csv')
