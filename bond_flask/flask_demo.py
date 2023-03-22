@@ -1,8 +1,15 @@
 from flask import Flask, request, render_template
 import pandas as pd
 from sqlalchemy import create_engine
+import logging
 
 app = Flask(__name__)
+
+app.logger.setLevel(logging.INFO)
+log_handler = logging.FileHandler('app.log')
+log_handler.setLevel(logging.INFO)
+app.logger.addHandler(log_handler)
+
 
 def get_data(bond_id):
 
@@ -34,8 +41,13 @@ def index():
 
 @app.route('/search', methods=['POST'])
 def search():
+    ip_address = request.remote_addr
+
+
     # 获取用户输入的城市名称
     bond_id = request.form['bond_id']
+
+    app.logger.info(f'logging >>>>> Search request from {ip_address} for bond_id: {bond_id}')
     
     # 从CSV文件中读取数据
     # data = pd.read_csv('data.csv')
