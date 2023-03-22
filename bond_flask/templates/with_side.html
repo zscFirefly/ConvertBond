@@ -1,68 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>可变宽度侧边栏示例</title>
-	<style>
-		/* 主要内容区域样式 */
-		.main {
-			margin-left: 200px; /* 左侧栏最小宽度 */
-			padding: 20px;
-			background-color: #f5f5f5;
-			min-height: 100vh; /* 最小高度为浏览器窗口高度 */
-		}
-		
-		/* 左侧栏样式 */
-		.sidebar {
-			position: fixed; /* 固定位置 */
-			top: 0;
-			left: 0;
-			width: 10%; /* 左侧栏初始宽度为页面宽度的20% */
-			height: 100vh;
-			background-color: #333;
-			color: #fff;
-			padding: 20px;
-			transition: width 0.3s ease-in-out; /* 宽度变化的过渡效果 */
-		}
-		
-		/* 左侧栏链接样式 */
-		.sidebar a {
-			display: block;
-			color: #fff;
-			text-decoration: none;
-			padding: 5px 10px;
-			margin-bottom: 10px;
-			border-radius: 5px;
-			transition: background-color 0.3s ease-in-out;
-		}
-		
-		/* 左侧栏链接悬停样式 */
-		.sidebar a:hover {
-			background-color: #fff;
-			color: #333;
-		}
-		
-		/* 媒体查询 */
-		@media screen and (max-width: 768px) {
-			.sidebar {
-				width: 100%; /* 在小屏幕下，左侧栏宽度为页面宽度的100% */
-			}
-			.main {
-				margin-left: 0; /* 在小屏幕下，主要内容区域没有左边距 */
-			}
-		}
-	</style>
+    <title>可转债信息查询</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            font-size: 32px;
+            color: #333;
+            text-align: center;
+            margin-top: 50px;
+        }
+        form {
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            flex: 1;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 10px;
+            flex-basis: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: #0069d9;
+        }
+        .double-low-button {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
-	<div class="sidebar">
-		<a href="http://43.143.142.50:5000/">链接1</a>
-		<a href="#">链接2</a>
-		<a href="#">链接3</a>
-		<a href="#">链接4</a>
-	</div>
-	<div class="main">
-		<h1>主要内容区域</h1>
-		<p>这是一个具有可变宽度的侧边栏的前端 HTML 页面示例。</p>
-		<p>在这个示例中，左侧栏采用百分比宽度，并设置了过渡效果，以便在宽度发生变化时产生平滑的动画效果。在小屏幕下，左侧栏宽度自动变为页面宽度的100%。主要内容区域没有左边距，以确保它始终填充整个屏幕。</p>
-	</div>
+    <h1>输入可转债代码</h1>
+    <form action="/search" method="post">
+        <input type="text" name="bond_id" placeholder="可转债代码">
+        <input type="submit" value="查询">
+    </form>
+    <div class="double-low-button">
+        <form action="/double_low" method="post">
+            <input type="submit" value="查询昨日双低可转债">
+        </form>
+    </div>
 </body>
 </html>
