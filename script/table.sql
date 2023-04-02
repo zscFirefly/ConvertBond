@@ -273,6 +273,10 @@ ALTER TABLE convert_bond_loopback ADD INDEX idx_bond_id(bond_id);
 
 
 
+select bond_id,max(date) convert_bond_total
+group by bond_id
+
+-- 清洗数据
 
 
 CREATE TABLE `convert_bond_total` (
