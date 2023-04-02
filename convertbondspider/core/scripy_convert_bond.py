@@ -7,6 +7,9 @@ import time
 
 from conf.sql_config import *
 from core.script_config import * 
+from core.script_config import ScriptConfig
+from core.user_login import *
+from common.calender import Calender
 
 
 class ScriptBase():
@@ -104,12 +107,12 @@ class ConvertBondHistory(ScriptBase):
         finish_data = finish_data.append(outline,ignore_index=True)
         now_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         # finish_data[['bond_id','bond_nm']].to_csv("debt_code.csv",index=False)
-        finish_data[['bond_id','bond_nm']].to_sql('tmp_convert_bond_info_0320', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+        finish_data[['bond_id','bond_nm']].to_sql('tmp_convert_bond_info_0402', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
 
 
     def read_debt_code(self):
         # data = pd.read_csv('debt_code.csv')
-        data = pd.read_sql(sql='select bond_id,bond_nm from tmp_convert_bond_info_0320', con=sqlExecute.engine)
+        data = pd.read_sql(sql='select bond_id,bond_nm from tmp_convert_bond_info_0402', con=sqlExecute.engine)
         return data
 
     def get_convert_detail(self,id):
@@ -153,7 +156,7 @@ class ConvertBondHistory(ScriptBase):
 
 
     def init(self):
-        table_name = 'tmp_convert_bond_history_0320'
+        table_name = 'tmp_convert_bond_history_0402'
         # now_time = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
         # FILE_NAME = "debt_detail"+now_time+".csv" # 文件名称
         # sql = 'truncate table %s;' % (table_name)
@@ -184,7 +187,16 @@ class ConvertBondHistory(ScriptBase):
 if __name__ == '__main__':
 #     cb = ConvertBondDaily()
 #     cb.run()
-    sc = ScriptConfig()
+
+    # 程序代码
+    sc = ScriptConfig() # 实例化配置对象
+    us = UserLogin(sc) # 实例化用户登陆对象
+
+    login_info = us.login() # 登陆，获取登陆账号及登陆session
+    us.activate_session(login_info) # 激活session
+    sc.set_session(login_info['kbzw__Session']) # 更新配置对象的cookies值
+    sc.set_user_login(login_info['kbzw__user_login']) # 更新配置对象的cookies值
+
     cb = ConvertBondHistory()
     cb.set_script_config(sc)
     cb.run()

@@ -269,3 +269,88 @@ create table convert_bond_loopback (
 
 ALTER TABLE convert_bond_loopback ADD INDEX idx_date(date);
 ALTER TABLE convert_bond_loopback ADD INDEX idx_bond_id(bond_id);
+
+
+
+
+
+
+CREATE TABLE `convert_bond_total` (
+  bond_id int(30) DEFAULT NULL COMMENT '转债ID',
+  date date DEFAULT NULL COMMENT '日期',
+  ytm_rt varchar(30) DEFAULT NULL COMMENT '到期税前收益率',
+  premium_rt varchar(30) DEFAULT NULL COMMENT '溢价率',
+  price  varchar(30) DEFAULT NULL COMMENT '价格',
+  convert_value varchar(30) DEFAULT NULL COMMENT '转债价值',
+  turnover_rt varchar(30) DEFAULT NULL COMMENT '换手率',
+  volume varchar(30) DEFAULT NULL COMMENT '成交额',
+  curr_iss_amt  varchar(30) DEFAULT NULL COMMENT '剩余规模'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='可转债汇总数据(手动触发)'
+;
+
+CREATE TABLE `convert_bond_total_prod` (
+  bond_id int(30) DEFAULT NULL COMMENT '转债ID',
+  date date DEFAULT NULL COMMENT '日期',
+  ytm_rt varchar(30) DEFAULT NULL COMMENT '到期税前收益率',
+  premium_rt varchar(30) DEFAULT NULL COMMENT '溢价率',
+  price  varchar(30) DEFAULT NULL COMMENT '价格',
+  convert_value varchar(30) DEFAULT NULL COMMENT '转债价值',
+  turnover_rt varchar(30) DEFAULT NULL COMMENT '换手率',
+  volume varchar(30) DEFAULT NULL COMMENT '成交额',
+  curr_iss_amt  varchar(30) DEFAULT NULL COMMENT '剩余规模'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='可转债汇总数据(手动触发)'
+;
+
+
+-- 近5年的可转债数据。
+insert into convert_bond_total
+-- 日常数据
+select bond_id
+, date
+, ytm_rt
+, premium_rt
+, cast(price as Decimal(30,2)) as price
+, convert_value
+, turnover_rt
+, volume
+, cast(curr_iss_amt as Decimal(30,2)) as curr_iss_amt
+from convert_bond_daily
+-- union 
+-- -- 所有0320问题，丢失数据
+-- select bond_id
+-- , date
+-- , ytm_rt
+-- , premium_rt
+-- , cast(price as Decimal(30,2)) as price
+-- , convert_value
+-- , turnover_rt
+-- , volume
+-- , cast(curr_iss_amt as Decimal(30,2)) as curr_iss_amt
+-- from tmp_convert_bond_history_0320
+-- where date = '2023-03-10'
+union 
+-- 所有0402问题，丢失数据
+select bond_id
+, date
+, ytm_rt
+, premium_rt
+, cast(price as Decimal(30,2)) as price
+, convert_value
+, turnover_rt
+, volume
+, cast(curr_iss_amt as Decimal(30,2)) as curr_iss_amt
+from tmp_convert_bond_history_0402
+where date in ('2023-03-29','2023-03-30','2023-03-10')
+union 
+-- 所有历史数据
+select bond_id
+, date
+, ytm_rt
+, premium_rt
+, cast(price as Decimal(30,2)) as price
+, convert_value
+, turnover_rt
+, volume
+, cast(curr_iss_amt as Decimal(30,2)) as curr_iss_amt
+from  tmp_convert_bond_history
+where date between '2018-01-01' and '2023-12-31'

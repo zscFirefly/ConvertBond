@@ -1,69 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>可转债信息查询</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            font-size: 32px;
-            color: #333;
-            text-align: center;
-            margin-top: 50px;
-        }
-        form {
-            width: 80%;
-            margin: 0 auto;
-            margin-top: 50px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-        }
-        input[type="text"] {
-            padding: 10px;
-            font-size: 18px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            flex: 1;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        input[type="submit"] {
-            padding: 10px;
-            font-size: 18px;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-bottom: 10px;
-            flex-basis: 100%;
-        }
-        input[type="submit"]:hover {
-            background-color: #0069d9;
-        }
-        .double-low-button {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-        }
-    </style>
+  <meta charset="utf-8">
+  <title>Vue.js Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 </head>
 <body>
-    <h1>输入可转债代码</h1>
-    <form action="/search" method="post">
-        <input type="text" name="bond_id" placeholder="可转债代码">
-        <input type="submit" value="查询">
-    </form>
-    <div class="double-low-button">
-        <form action="/double_low" method="post">
-            <input type="submit" value="查询昨日双低可转债">
-        </form>
-    </div>
+  <div id="app">
+    <h1>{{ greeting }}</h1>
+    <p>Enter your name:</p>
+    <input type="text" v-model="name">
+    <p>Your name is: {{ name }}</p>
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        greeting: 'Hello, Vue!',
+        name: ''
+      }
+    })
+  </script>
 </body>
 </html>
