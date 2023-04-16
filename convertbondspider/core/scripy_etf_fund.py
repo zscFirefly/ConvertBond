@@ -15,7 +15,7 @@ import time
 
 from conf.sql_config import *
 from core.script_etf_config import * 
-from core.script_etf_config import ScriptetfConfig
+from core.script_etf_config import ScriptETFConfig
 from core.user_login import *
 from common.calender import Calender
 
