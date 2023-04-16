@@ -145,8 +145,8 @@ class ScriptETF():
 
 
 if __name__ == '__main__':
-    sc = ScriptetfConfig() # 实例化配置对象
-    se = Scriptetf()
+    sc = ScriptETFConfig() # 实例化配置对象
+    se = ScriptETF()
     se.set_script_etf_config(sc)
     df = se.run()
     # print(df)
