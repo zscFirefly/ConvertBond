@@ -22,6 +22,8 @@ from core.script_etf_config import ScriptETFConfig
 from core.user_login import *
 from common.calender import Calender
 from datetime import datetime, timedelta
+from common.wechat import WeChat
+from conf.wechat_config import WeChatConfig
 
 
 class ScriptETF():
@@ -129,7 +131,7 @@ class ScriptETF():
         return new_date_str
 
 
-    def get_condition_date(self,date):
+    def get_condition_data(self,date):
         get_date_sql = 'select timestamp from dev_etf_macd_data where timestamp <= "%s" group by timestamp order by timestamp desc' % (date)
         date_df = pd.read_sql(sql=get_date_sql, con=sqlExecute.engine)
         
@@ -158,28 +160,15 @@ class ScriptETF():
         and a < 0
         and b < 0
         and c < 0
+        and e < 0
         and g > 0
         and amount > 100000000
         and close < 10
         '''.format(date_df.at[0,'timestamp'],date_df.at[1,'timestamp'],date_df.at[2,'timestamp'],date_df.at[3,'timestamp'],date_df.at[4,'timestamp'],date_df.at[5,'timestamp'],date_df.at[6,'timestamp'],table_name = self.etf_macd_table_name)
-        print(sql)
         df = pd.read_sql(sql=sql, con=sqlExecute.engine)
-        print(df)
+        return df
 
 
-
-
-    def get_condition_fund(self):
-        # 获取当前时间
-        now = datetime.datetime.now()
-        # 将时间转换为指定格式
-        now_str = now.strftime("%Y-%m-%d %H:%M:%S")
-        yesterday_str = subtract_one_day(now_str,1)
-        yesterday_str = subtract_one_day(now_str,2)
-        yesterday_str = subtract_one_day(now_str,3)
-        yesterday_str = subtract_one_day(now_str,4)
-        yesterday_str = subtract_one_day(now_str,5)
-        print()
 
 
 
@@ -217,28 +206,12 @@ class ScriptETF():
             # close = group['close'].values
             group['dif'],group['dea'],group['macd'] = talib.MACD(np.array(group['close']),fastperiod=12, slowperiod=26, signalperiod=9)
             group['macd'] = group['macd'] * 2
-            
-        #     # # 将MACD值添加到原始DataFrame对象中
-        #     # group['macd'] = macd
-        #     # group['dif'] = signal
-        #     # group['dea'] = hist
-        #     # result = pd.concat([group,result],axis=0)
-
-
             now = datetime.now()
             now_str = now.strftime("%Y-%m-%d %H:%M:%S")
             group['etl_load_time'] = now_str
 
-
-
             group.to_sql("dev_etf_macd_data", sqlExecute.engine, if_exists='append', index=False, chunksize=100)
 
-
-
-
-
-        
-        # all_data['MACD'],all_data['MACDsignal'],all_data['MACDhist'] = talib.MACD(np.array(all_data['close']),fastperiod=12, slowperiod=26, signalperiod=9)
 
 
 
@@ -293,7 +266,28 @@ class ScriptETF():
             print("获取etf：%s" %(etf_code) )
             time.sleep(0.5)
 
+    def get_message(self,df):
+        msg = '''今日ETF潜在机会:\n'''
+        data = ''''''
+        for i in range(len(df)):
+            data = data + '' + df.at[i,'symbol'] + ' ' + str(round(df.at[i,'f'],3)) + ' ' + str(round(df.at[i,'g'],3)) + ' ' + str(round(df.at[i,'close'],1)) + ' ' + str(round(df.at[i,'amount']/100000000,1)) + '\n'
 
+        return msg + data            
+ 
+
+    def main(self):
+        # message = r'''hello world\n <a href=\"http://work.weixin.qq.com\">邮件中心视频实况</a>'''
+        message = "ssd"
+        # message = '''aaa'''
+        wcc = WeChatConfig()
+        wcc.set_corpid('wwf61f5f63b0d60a9a')
+        wcc.set_corpsecret('YxOnQIESRN_kiKjHjpbAyR1VH__nxqUyBWy-dNfEbj4')
+
+        # 构造企业微信消息推送实例
+        wc = WeChat(wcc)
+        wc.set_user("ZhengShuoCong") # 设置消息发送人
+        wc.set_agentid(1000002) # 设置发送应用
+        wc.send_message(message) # 设置发送消息
 
 
 
@@ -304,6 +298,18 @@ if __name__ == '__main__':
     se = ScriptETF()
     se.set_script_etf_config(sc)
     # df = se.run_history()
-    se.analysis_etf()
-    # se.get_condition_date('2023-04-01')
-    # print(df)
+    # se.analysis_etf()
+    df = se.get_condition_data('2023-04-01')
+
+    msg = se.get_message(df)
+
+    wcc = WeChatConfig()
+    wcc.set_corpid('wwf61f5f63b0d60a9a')
+    wcc.set_corpsecret('YxOnQIESRN_kiKjHjpbAyR1VH__nxqUyBWy-dNfEbj4')
+    wc = WeChat(wcc)
+    wc.set_user("ZhengShuoCong")
+    wc.set_msgtype("text")
+    wc.set_agentid(1000002)
+    wc.send_message(msg)
+
+
