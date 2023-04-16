@@ -103,31 +103,31 @@ class ScriptETF():
     def read_etf_code(self):
         # data = pd.read_csv('debt_code.csv')
         today = datetime.date.today()
-        sql = '''select symbol from dev_etf_bond_info  where timestamp = '%s' ;''' % (today)
+        sql = '''select symbol from dev_etf_fund_info  where timestamp = '%s' ;''' % (today)
         data = pd.read_sql(sql=sql, con=sqlExecute.engine)
         return data
 
     def run(self):
-        # table_name = 'dev_etf_bond_info'
-        # df = self.get_etf_code()
+        table_name = 'dev_etf_fund_detail'
+        df = self.get_etf_code()
         # print(df.columns)
-        # df['timestamp'] = df['timestamp'].apply(self.change_timestamp2date)
-        # ts_list = df['timestamp'].drop_duplicates()
-        # if len(ts_list) >= 2:
-        #     print("Error: 所爬数据出现跨日期异常！")
-        #     print(ts_list)
-        #     exit();
+        df['timestamp'] = df['timestamp'].apply(self.change_timestamp2date)
+        ts_list = df['timestamp'].drop_duplicates()
+        if len(ts_list) >= 2:
+            print("Error: 所爬数据出现跨日期异常！")
+            print(ts_list)
+            exit();
 
-        # print("开始删除数据.....")
-        # sql = "delete from %s where `timestamp` = '%s' " % (table_name,ts_list[1])
-        # with sqlExecute.engine.connect() as connect:
-        #     connect.execute(sql)
-        # print("删除数据完成。")        
+        print("开始删除数据.....")
+        sql = "delete from %s where `timestamp` = '%s' " % (table_name,ts_list[1])
+        with sqlExecute.engine.connect() as connect:
+            connect.execute(sql)
+        print("删除数据完成。")        
 
-        # df.to_sql(table_name, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+        df.to_sql(table_name, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
         # df = self.get_etf_detail('SH516510')
         # print(df)
-        table_name = 'dev_etf_bond_detail'
+        # table_name = 'dev_etf_fund_detail'
         df = self.read_etf_code()
         etf_codes = df['symbol'].tolist()
         for etf_code in etf_codes:
