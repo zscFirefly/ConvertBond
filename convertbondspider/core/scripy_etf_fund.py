@@ -108,7 +108,7 @@ class ScriptETF():
         return data
 
     def run(self):
-        table_name = 'dev_etf_fund_detail'
+        table_name = 'dev_etf_fund_info'
         df = self.get_etf_code()
         # print(df.columns)
         df['timestamp'] = df['timestamp'].apply(self.change_timestamp2date)
