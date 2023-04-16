@@ -1,5 +1,5 @@
 
-class ScriptETLConfig():
+class ScriptETFConfig():
     '''爬虫cookies信息配置'''
     def __init__(self):
         pass
