@@ -184,11 +184,16 @@ class ScriptETF():
 
 
     def analysis_etf(self):
-        his_sql = 'select timestamp,symbol,close as close,amount from dev_etf_fund_detail'
+        # his_sql = 'select timestamp,symbol,close as close,amount,macd as macd_org,dea as dea_org,dif as dif_org from dev_etf_fund_detail  where symbol = "SH515220" order by timestamp'
+
+        his_sql = 'select timestamp,symbol,close as close,amount from dev_etf_fund_detail order by timestamp'
         curr_sql = 'select timestamp,symbol,current as close,amount from dev_etf_fund_info'
 
-        # all_data = pd.read_sql(sql=curr_sql, con=sqlExecute.engine)
+        # all_data = pd.read_sql(sql=his_sql, con=sqlExecute.engine)
         # all_data['dif'],all_data['dea'],all_data['MACD'] = talib.MACD(np.array(all_data['close']),fastperiod=12, slowperiod=26, signalperiod=9)
+
+        # all_data['dif'],all_data['dea'],all_data['MACD']= talib.MACDEXT(np.array(all_data['close']), fastperiod=12, fastmatype=1,slowperiod=26, slowmatype=1, signalperiod=9, signalmatype=1)
+        # all_data['MACD'] = all_data['MACD'] * 2
         # print(all_data)
 
 
@@ -211,12 +216,13 @@ class ScriptETF():
             print(group)
             # close = group['close'].values
             group['dif'],group['dea'],group['macd'] = talib.MACD(np.array(group['close']),fastperiod=12, slowperiod=26, signalperiod=9)
+            group['macd'] = group['macd'] * 2
             
-            # # 将MACD值添加到原始DataFrame对象中
-            # group['macd'] = macd
-            # group['dif'] = signal
-            # group['dea'] = hist
-            # result = pd.concat([group,result],axis=0)
+        #     # # 将MACD值添加到原始DataFrame对象中
+        #     # group['macd'] = macd
+        #     # group['dif'] = signal
+        #     # group['dea'] = hist
+        #     # result = pd.concat([group,result],axis=0)
 
 
             now = datetime.now()
