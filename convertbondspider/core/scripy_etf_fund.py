@@ -102,8 +102,10 @@ class ScriptETF():
 
     def read_etf_code(self):
         # data = pd.read_csv('debt_code.csv')
-        today = datetime.date.today()
+        # today = datetime.date.today()
+        today = '2023-04-14'
         sql = '''select symbol from dev_etf_fund_info  where timestamp = '%s' ;''' % (today)
+        print(sql)
         data = pd.read_sql(sql=sql, con=sqlExecute.engine)
         return data
 
@@ -118,18 +120,21 @@ class ScriptETF():
             print(ts_list)
             exit();
 
-        # print("开始删除数据.....")
-        # sql = "delete from %s where `timestamp` = '%s' " % (table_name,ts_list[1])
-        # with sqlExecute.engine.connect() as connect:
-        #     connect.execute(sql)
-        # print("删除数据完成。")        
+        print("开始删除数据.....")
+        sql = "delete from %s where `timestamp` = '%s' " % (table_name,ts_list[1])
+        with sqlExecute.engine.connect() as connect:
+            connect.execute(sql)
+        print("删除数据完成。")        
 
         df.to_sql(table_name, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
         # df = self.get_etf_detail('SH516510')
         # print(df)
         # table_name = 'dev_etf_fund_detail'
+        print("开始获取明细数据")
         df = self.read_etf_code()
+        print(df)
         etf_codes = df['symbol'].tolist()
+        print(etf_codes)
         for etf_code in etf_codes:
             df = self.get_etf_detail(etf_code)
             df['timestamp'] = df['timestamp'].apply(self.change_timestamp2date)
