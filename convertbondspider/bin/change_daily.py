@@ -8,8 +8,9 @@ from datetime import date,timedelta
 
 from common.search_data import SearchData
 from common.feishu import FeiShu
+from common.wechat import WeChat
 from conf.feishu_config import *
-
+from conf.wechat_config import *
 
 
 class ChangePolicy():
@@ -47,8 +48,13 @@ class ChangePolicy():
 	def if_change(self):
 		is_work_sql = '''select is_change from dim_date where day_short_desc = '%s' and is_work = 1 and is_holiday = 0  ''' % (self.date)
 		sd = SearchData(is_work_sql)
+		print(is_work_sql)
+
 		df = sd.read_data()	
-		if df.at[0,'is_change']%self.change_period == 0:
+
+		if len(df) == 0:
+			flag = 0
+		elif df.at[0,'is_change']%self.change_period == 0:
 			flag = 1
 		else:
 			flag = 0
@@ -68,6 +74,15 @@ if __name__ == '__main__':
 	fc.set_app_id('cli_a3ee5eca19b9900d')
 	fc.set_app_secret('sSjQawQabi0sdODSiCxoggeMLhNEWnq7')
 	fs = FeiShu(fc)
+
+	# 企业微信配置
+	wcc = WeChatConfig()
+	wcc.set_corpid('wwf61f5f63b0d60a9a')
+	wcc.set_corpsecret('YxOnQIESRN_kiKjHjpbAyR1VH__nxqUyBWy-dNfEbj4')
+	wc = WeChat(wcc)
+	wc.set_user("ZhengShuoCong") # 设置消息发送人
+	wc.set_agentid(1000002) # 设置发送应用
+
 
 	change_date = (date.today() + timedelta(days=-1)).strftime("%Y-%m-%d")
 	# datetime.datetime.now().strftime('%Y-%m-%d') ## 交易日期
@@ -89,9 +104,11 @@ if __name__ == '__main__':
 
 
 		fs.send_message(message)
+		wc.send_message(message) # 设置发送消息
 
 	else:
 		fs.send_message('今日：%s，无需交易。' % ((date.today().strftime("%Y-%m-%d"))))
+		wc.send_message('今日：%s，无需交易。' % ((date.today().strftime("%Y-%m-%d"))))
 		# df = changepolicy.caculate(20) # 策略数量
 		print("End")
 
