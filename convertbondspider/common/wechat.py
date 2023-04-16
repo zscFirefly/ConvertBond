@@ -16,6 +16,7 @@ class WeChat():
         self.user = ""
         self.party = ""
         self.tag = ""
+        self.msgtype = ""
 
     def set_user(self,user):
         self.user = user
@@ -25,6 +26,9 @@ class WeChat():
 
     def set_tag(self,tag):
         self.tag = tag
+
+    def set_msgtype(self,msgtype):
+        self.msgtype = msgtype
 
     def set_agentid(self,agentid):
         self.agentid = agentid
@@ -49,16 +53,22 @@ class WeChat():
             "touser": self.user,
             "toparty": self.party,
             "totag": self.tag,
-            "msgtype": "text",
+            "msgtype": self.msgtype,
             "agentid": self.agentid,
-            "text": {"content": text},
+            self.msgtype: {"content": text},
             "safe": 0,
             "enable_id_trans": 0,
-            "enable_duplicate_check": 0
+            "duplicate_check_interval": 1800
+            # "enable_duplicate_check": 0
         }
+
+        jsons = json.dumps(data,ensure_ascii=False)
+        jsons = jsons.encode('utf-8')
+
+        print(data)
         url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?debug=1&access_token=%s" % (access_token)
 
-        res = requests.post(url=url, json=data)
+        res = requests.post(url=url, data=jsons)
         print(res.json())
 
 if __name__ == '__main__':
@@ -67,6 +77,9 @@ if __name__ == '__main__':
     wcc.set_corpsecret('YxOnQIESRN_kiKjHjpbAyR1VH__nxqUyBWy-dNfEbj4')
     wc = WeChat(wcc)
     wc.set_user("ZhengShuoCong")
+    wc.set_msgtype("text")
     wc.set_agentid(1000002)
-    wc.send_message("hello world")
+    message = '''今日ETL潜在机会
+SH515220  0.0015  0.0076  0.1'''
+    wc.send_message(message)
 
