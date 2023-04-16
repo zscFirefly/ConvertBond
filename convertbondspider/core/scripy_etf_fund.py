@@ -118,11 +118,11 @@ class ScriptETF():
             print(ts_list)
             exit();
 
-        print("开始删除数据.....")
-        sql = "delete from %s where `timestamp` = '%s' " % (table_name,ts_list[1])
-        with sqlExecute.engine.connect() as connect:
-            connect.execute(sql)
-        print("删除数据完成。")        
+        # print("开始删除数据.....")
+        # sql = "delete from %s where `timestamp` = '%s' " % (table_name,ts_list[1])
+        # with sqlExecute.engine.connect() as connect:
+        #     connect.execute(sql)
+        # print("删除数据完成。")        
 
         df.to_sql(table_name, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
         # df = self.get_etf_detail('SH516510')
