@@ -6,7 +6,8 @@ import datetime
 from core.monitor import *
 from common.calender import Calender
 from common.search_data import SearchData
-
+from common.wechat import WeChat
+from conf.wechat_config import WeChatConfig
 
 
 
@@ -34,9 +35,20 @@ def main():
     fc.set_app_id('cli_a3ee5eca19b9900d')
     fc.set_app_secret('sSjQawQabi0sdODSiCxoggeMLhNEWnq7')
 
-    # 构造监控实例
+    # 构造飞书-监控实例
     fs = FeiShu(fc)
     fs.send_message(message) # 发送消息
+
+    # 构造企业微信配置实例
+    wcc = WeChatConfig()
+    wcc.set_corpid('wwf61f5f63b0d60a9a')
+    wcc.set_corpsecret('YxOnQIESRN_kiKjHjpbAyR1VH__nxqUyBWy-dNfEbj4')
+
+    # 构造企业微信消息推送实例
+    wc = WeChat(wcc)
+    wc.set_user("ZhengShuoCong") # 设置消息发送人
+    wc.set_agentid(1000002) # 设置发送应用
+    wc.send_message(message) # 设置发送消息
 
 
 
