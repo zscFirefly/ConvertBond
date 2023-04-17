@@ -20,4 +20,12 @@ if __name__ == '__main__':
     se.set_script_etf_config(sc)
     se.run_daily()
 
+    wcc = WeChatConfig()
+    wcc.set_corpid('wwf61f5f63b0d60a9a')
+    wcc.set_corpsecret('YxOnQIESRN_kiKjHjpbAyR1VH__nxqUyBWy-dNfEbj4')
+    wc = WeChat(wcc)
+    wc.set_user("ZhengShuoCong")
+    wc.set_msgtype("text")
+    wc.set_agentid(1000002)
+    wc.send_message("今日ETF爬虫完成")
 
