@@ -65,6 +65,17 @@ source ~/.bash_profile
 ln -s sql-etl.sh sql-etl
 ```
 
+## crontab配置
+```shell
+10 15 * * * cd /root/job/ConvertBond/convertbondspider/bin && python3 run_daily.py >> ~/convertbond.log
+15 15 * * * cd /root/job/ConvertBond/convertbondspider/bin && python3 monitor_daily.py >> ~/monitor.log 
+00 09 * * * cd /root/job/ConvertBond/convertbondspider/bin && python3 change_daily.py >> ~/change.log 
+15 15 * * * cd /root/job/ConvertBond/convertbondspider/bin && python3 scripy_etf_fund_daily.py >> ~/scripy_etf_fund_daily.log 
+10 09 * * * cd /root/job/ConvertBond/convertbondspider/bin && python3 monitor_etf_fund_daily.py >> ~/monitor_etf_fund_daily.log 
+
+
+```
+
 ## 项目难点
 1. 集思录登陆：调用登陆接口，换取session后，需要调用主页接口才能激活session，用session去调用可转债列表数据。
 2. 飞书调用群消息接口：需要创建应用，启动机器人，获取用户id。参考链接：https://blog.csdn.net/viviliving/article/details/121589128
