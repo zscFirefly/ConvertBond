@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, send_from_directory
 import os
+import pandas as pd 
 
 app = Flask(__name__)
 
@@ -33,6 +34,13 @@ def download(filename):
 @app.route('/run/<filename>')
 def run(filename):
     filepath = os.path.join(UPLOAD_FOLDER, filename)
+    print(filename)
+    print(filepath)
+    data = pd.read_csv(filename)
+    data.insert(data.shape[1],"order",1)
+    
+    data.to_csv(filepath+".run")
+
     # TODO: add code to run the file here
     return 'Run function executed successfully for file: {}'.format(filename)
 
