@@ -46,24 +46,16 @@ class ScriptETF():
 
         return finish_data
 
+    def change_timestamp2date(self,ts_ms):
+        '''将时间戳转化为日期'''
+        ts_sec = ts_ms / 1000  # 转换为秒
+        utc_datetime = datetime.utcfromtimestamp(ts_sec)  # 转换为UTC时间
+        local_datetime = utc_datetime + timedelta(hours=8)  # 转换为当地时间（北京时间）
+        date_str = local_datetime.strftime('%Y-%m-%d')  # 转换为%Y-%m-%d格式的字符串
+        return date_str
+
     def get_etf_code(self):
-        url = 'https://stock.xueqiu.com/v5/stock/screener/fund/list.json'
-        data = {
-            'type': '18',
-            'parent_type': '1',
-            'order': 'desc',
-            'order_by': 'percent',
-            'page': '1',
-            'size': '1000',
-        }
-
-        response = requests.get(url = url,params=data,cookies=self.script_etf_config.get_cookies(),headers=self.script_etf_config.get_headers())
-        etf_list = response.json()['data']['list']
-        df = self.util_to_df(etf_list)
-        return df
-
-
-    def get_etf_info(self):
+        '''获取所有etf列表信息'''
         url = 'https://stock.xueqiu.com/v5/stock/screener/fund/list.json'
         data = {
             'type': '18',
@@ -81,6 +73,7 @@ class ScriptETF():
 
 
     def get_etf_detail(self,code):
+        '''获取所有etf的k线图数据'''
         url = "https://stock.xueqiu.com/v5/stock/chart/kline.json?"
         data = {
             'symbol': code, 
@@ -102,117 +95,13 @@ class ScriptETF():
         return df
 
 
-    def change_timestamp2date(self,ts_ms):
-        ts_sec = ts_ms / 1000  # 转换为秒
-        utc_datetime = datetime.utcfromtimestamp(ts_sec)  # 转换为UTC时间
-        local_datetime = utc_datetime + datetime.timedelta(hours=8)  # 转换为当地时间（北京时间）
-        date_str = local_datetime.strftime('%Y-%m-%d')  # 转换为%Y-%m-%d格式的字符串
-        return date_str
-
-
-    def read_etf_code(self):
-        # data = pd.read_csv('debt_code.csv')
-        # today = datetime.date.today()
-        today = '2023-04-14'
+    def read_etf_code(self,date):
+        '''爬取历史明细数据时，读取etf列表'''
+        # today = '2023-04-14'
         sql = '''select symbol from dev_etf_fund_info  where timestamp = '%s' ;''' % (today)
         print(sql)
         data = pd.read_sql(sql=sql, con=sqlExecute.engine)
         return data
-
-
-    def subtract_one_day(date_str,i):
-        # 将字符串形式的日期转换为datetime对象
-        date_obj = datetime.strptime(date_str, '%Y-%m-%d')
-        # 减去一天
-        new_date_obj = date_obj - timedelta(days=i)
-        # 将结果转换回字符串形式
-        new_date_str = new_date_obj.strftime('%Y-%m-%d')
-        
-        return new_date_str
-
-
-    def get_condition_data(self,date):
-        get_date_sql = 'select timestamp from dev_etf_macd_data where timestamp <= "%s" group by timestamp order by timestamp desc' % (date)
-        date_df = pd.read_sql(sql=get_date_sql, con=sqlExecute.engine)
-        
-
-        ## 比如：我需要获取03-01的数据，那么，我需要去拿相应日期前几天的macd值
-        sql = ''' select * from (
-            select symbol
-            , sum(case when timestamp = '{6}' then macd else null end) as a
-            , sum(case when timestamp = '{5}' then macd else null end) as b
-            , sum(case when timestamp = '{4}' then macd else null end) as c
-            , sum(case when timestamp = '{3}' then macd else null end) as d
-            , sum(case when timestamp = '{2}' then macd else null end) as e
-            , sum(case when timestamp = '{1}' then macd else null end) as f
-            , sum(case when timestamp = '{0}' then macd else null end) as g
-            , sum(case when timestamp = '{0}' then close else null end) as close
-            , sum(case when timestamp = '{0}' then amount else null end) as amount
-            from {table_name} where timestamp >= '{6}' 
-            group by symbol
-        )a 
-        where a < b
-        and b < c
-        and c < d
-        and d < e
-        and e < f
-        and f < g
-        and a < 0
-        and b < 0
-        and c < 0
-        and e < 0
-        and g > 0
-        and amount > 100000000
-        and close < 10
-        '''.format(date_df.at[0,'timestamp'],date_df.at[1,'timestamp'],date_df.at[2,'timestamp'],date_df.at[3,'timestamp'],date_df.at[4,'timestamp'],date_df.at[5,'timestamp'],date_df.at[6,'timestamp'],table_name = self.etf_macd_table_name)
-        df = pd.read_sql(sql=sql, con=sqlExecute.engine)
-        return df
-
-
-
-
-
-    def analysis_etf(self):
-        # his_sql = 'select timestamp,symbol,close as close,amount,macd as macd_org,dea as dea_org,dif as dif_org from dev_etf_fund_detail  where symbol = "SH515220" order by timestamp'
-
-        his_sql = 'select timestamp,symbol,close as close,amount from dev_etf_fund_detail order by timestamp'
-        curr_sql = 'select timestamp,symbol,current as close,amount from dev_etf_fund_info'
-
-        # all_data = pd.read_sql(sql=his_sql, con=sqlExecute.engine)
-        # all_data['dif'],all_data['dea'],all_data['MACD'] = talib.MACD(np.array(all_data['close']),fastperiod=12, slowperiod=26, signalperiod=9)
-
-        # all_data['dif'],all_data['dea'],all_data['MACD']= talib.MACDEXT(np.array(all_data['close']), fastperiod=12, fastmatype=1,slowperiod=26, slowmatype=1, signalperiod=9, signalmatype=1)
-        # all_data['MACD'] = all_data['MACD'] * 2
-        # print(all_data)
-
-
-        his_data = pd.read_sql(sql=his_sql, con=sqlExecute.engine)
-        curr_data = pd.read_sql(sql=curr_sql, con=sqlExecute.engine)
-        all_data = pd.concat([his_data,curr_data],axis=0)
-        all_data.drop_duplicates(subset=['timestamp','symbol','close','amount'],keep='first')
-
-
-        print("开始删除数据.....")
-        sql = "truncate table %s ;" % (self.etf_macd_table_name)
-        with sqlExecute.engine.connect() as connect:
-            connect.execute(sql)
-        print("删除数据完成。")
-
-        groups = all_data.groupby('symbol')
-        result = pd.DataFrame()
-        for name, group in groups:
-            group.sort_values(by="timestamp" , inplace=True, ascending=True) 
-            print(group)
-            # close = group['close'].values
-            group['dif'],group['dea'],group['macd'] = talib.MACD(np.array(group['close']),fastperiod=12, slowperiod=26, signalperiod=9)
-            group['macd'] = group['macd'] * 2
-            now = datetime.now()
-            now_str = now.strftime("%Y-%m-%d %H:%M:%S")
-            group['etl_load_time'] = now_str
-
-            group.to_sql("dev_etf_macd_data", sqlExecute.engine, if_exists='append', index=False, chunksize=100)
-
-
 
 
     def run_daily(self):
@@ -225,11 +114,15 @@ class ScriptETF():
             print(ts_list)
             exit();
 
-        print("开始删除数据.....")
+
+        print("开始删除%s的数据....."%(ts_list[1]))
         sql = "delete from %s where `timestamp` = '%s' " % (self.etf_info_table_name,ts_list[1])
         with sqlExecute.engine.connect() as connect:
             connect.execute(sql)
-        print("删除数据完成。")        
+        print("删除数据完成。")
+        df.to_sql(self.etf_info_table_name, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+        print("存储数据完成")
+
 
 
 
@@ -244,7 +137,7 @@ class ScriptETF():
             print(ts_list)
             exit();
 
-        print("开始删除数据.....")
+        print("开始删除%s的数据....."%(ts_list[1]))
         sql = "delete from %s where `timestamp` = '%s' " % (self.etf_info_table_name,ts_list[1])
         with sqlExecute.engine.connect() as connect:
             connect.execute(sql)
@@ -297,19 +190,19 @@ if __name__ == '__main__':
     sc = ScriptETFConfig() # 实例化配置对象
     se = ScriptETF()
     se.set_script_etf_config(sc)
+    se.run_daily()
     # df = se.run_history()
     # se.analysis_etf()
-    df = se.get_condition_data('2023-04-01')
+    # df = se.get_condition_data('2023-04-01')
 
-    msg = se.get_message(df)
-
-    wcc = WeChatConfig()
-    wcc.set_corpid('wwf61f5f63b0d60a9a')
-    wcc.set_corpsecret('YxOnQIESRN_kiKjHjpbAyR1VH__nxqUyBWy-dNfEbj4')
-    wc = WeChat(wcc)
-    wc.set_user("ZhengShuoCong")
-    wc.set_msgtype("text")
-    wc.set_agentid(1000002)
-    wc.send_message(msg)
+    # msg = se.get_message(df)
+    # wcc = WeChatConfig()
+    # wcc.set_corpid('wwf61f5f63b0d60a9a')
+    # wcc.set_corpsecret('YxOnQIESRN_kiKjHjpbAyR1VH__nxqUyBWy-dNfEbj4')
+    # wc = WeChat(wcc)
+    # wc.set_user("ZhengShuoCong")
+    # wc.set_msgtype("text")
+    # wc.set_agentid(1000002)
+    # wc.send_message(msg)
 
 
