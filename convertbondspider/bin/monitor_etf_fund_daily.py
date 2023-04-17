@@ -14,6 +14,7 @@ from conf.wechat_config import WeChatConfig
 
 
 if __name__ == '__main__':
+    print("开始执行：%s" % (datetime.datetime.now().strftime('%Y-%m-%d')))
     date_str = datetime.datetime.now().strftime("%Y-%m-%d")
     # 判断是否为交易日，如果不为交易日，则不必执行
     ca = Calender(date_str)

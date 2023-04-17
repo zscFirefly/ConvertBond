@@ -14,6 +14,7 @@ from conf.wechat_config import WeChatConfig
 
 
 if __name__ == '__main__':
+    print("开始执行：%s" % (datetime.datetime.now().strftime('%Y-%m-%d')))
     sc = ScriptETFConfig() # 实例化配置对象
     se = ScriptETF()
     se.set_script_etf_config(sc)
