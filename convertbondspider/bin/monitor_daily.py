@@ -47,6 +47,7 @@ def main():
     # 构造企业微信消息推送实例
     wc = WeChat(wcc)
     wc.set_user("ZhengShuoCong") # 设置消息发送人
+    wc.set_msgtype("text")
     wc.set_agentid(1000002) # 设置发送应用
     wc.send_message(message) # 设置发送消息
 

@@ -80,6 +80,7 @@ if __name__ == '__main__':
 	wcc.set_corpid('wwf61f5f63b0d60a9a')
 	wcc.set_corpsecret('YxOnQIESRN_kiKjHjpbAyR1VH__nxqUyBWy-dNfEbj4')
 	wc = WeChat(wcc)
+    wc.set_msgtype("text")
 	wc.set_user("ZhengShuoCong") # 设置消息发送人
 	wc.set_agentid(1000002) # 设置发送应用
 
