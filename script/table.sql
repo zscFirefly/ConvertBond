@@ -358,3 +358,89 @@ select bond_id
 , cast(curr_iss_amt as Decimal(30,2)) as curr_iss_amt
 from  tmp_convert_bond_history
 where date between '2018-01-01' and '2023-12-31'
+
+
+
+CREATE TABLE `dev_etf_fund_info` (
+  `symbol` varchar(30),
+  `amount` decimal(20,6) DEFAULT NULL,
+  `chg` decimal(20,6) DEFAULT NULL,
+  `acc_unit_nav` decimal(20,6) DEFAULT NULL,
+  `expiration_time` bigint(20) DEFAULT NULL,
+  `rating` bigint(20) DEFAULT NULL,
+  `etf_types` text,
+  `type` bigint(20) DEFAULT NULL,
+  `percent` decimal(20,6) DEFAULT NULL,
+  `tick_size` decimal(20,6) DEFAULT NULL,
+  `has_follow` tinyint(1) DEFAULT NULL,
+  `volume` bigint(20) DEFAULT NULL,
+  `current` decimal(20,6) DEFAULT NULL,
+  `current_year_percent` decimal(20,6) DEFAULT NULL,
+  `etf_parent_type` varchar(30),
+  `followers` bigint(20) DEFAULT NULL,
+  `name` varchar(30),
+  `market_capital` decimal(20,6) DEFAULT NULL,
+  `premium_rate` decimal(20,6) DEFAULT NULL,
+  `lot_size` bigint(20) DEFAULT NULL,
+  `unit_nav` decimal(20,6) DEFAULT NULL,
+  `total_shares` bigint(20) DEFAULT NULL,
+  `timestamp` varchar(30)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+
+CREATE TABLE `dev_etf_fund_detail` (
+  `timestamp` varchar(30),
+  `volume` bigint(20) DEFAULT NULL,
+  `open` decimal(20,6) DEFAULT NULL,
+  `high` decimal(20,6) DEFAULT NULL,
+  `low` decimal(20,6) DEFAULT NULL,
+  `close` decimal(20,6) DEFAULT NULL,
+  `chg` decimal(20,6) DEFAULT NULL,
+  `percent` decimal(20,6) DEFAULT NULL,
+  `turnoverrate` decimal(20,6) DEFAULT NULL,
+  `amount` decimal(20,6) DEFAULT NULL,
+  `volume_post` varchar(30),
+  `amount_post` varchar(30),
+  `dea` decimal(20,6) DEFAULT NULL,
+  `dif` decimal(20,6) DEFAULT NULL,
+  `macd` decimal(20,6) DEFAULT NULL,
+  `pe` varchar(30),
+  `pb` varchar(30),
+  `ps` varchar(30),
+  `pcf` varchar(30),
+  `market_capital` varchar(30),
+  `balance` varchar(30),
+  `hold_volume_cn` varchar(30),
+  `hold_ratio_cn` varchar(30),
+  `net_volume_cn` varchar(30),
+  `hold_volume_hk` varchar(30),
+  `hold_ratio_hk` varchar(30),
+  `net_volume_hk` varchar(30),
+  `symbol` varchar(30)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+;
+
+CREATE TABLE `dev_etf_macd_data` (
+  `timestamp` varchar(30),
+  `symbol` varchar(30),
+  `close` decimal(20,6) DEFAULT NULL,
+  `amount` decimal(20,6) DEFAULT NULL,
+  `macd` decimal(20,6) DEFAULT NULL,
+  `dif` decimal(20,6) DEFAULT NULL,
+  `dea` decimal(20,6) DEFAULT NULL,
+  `etl_load_time` varchar(30)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+
+;
+
+
+
+
+update dim_date set is_holiday=0;
+update dim_date set is_holiday=1
+where day_short_desc in ('2023-01-01','2023-01-02','2023-01-21','2023-01-22','2023-01-23','2023-01-24','2023-01-25','2023-01-26'
+    ,'2023-01-27','2023-04-05','2023-04-29','2023-04-30','2023-05-01','2023-05-02','2023-05-03','2023-06-22','2023-06-23'
+    ,'2023-09-29','2023-10-01','2023-10-02','2023-10-03'
+    ,'2023-10-04','2023-10-05','2023-10-06');
+update dim_date set is_work=1 where week_desc in ('星期一','星期二','星期三','星期四','星期五') and is_holiday = 0;
+update dim_date set is_work=0 where week_desc in ('星期六','星期日') or is_holiday=1;
