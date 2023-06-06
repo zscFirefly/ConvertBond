@@ -120,6 +120,7 @@ class ScriptETF():
         with sqlExecute.engine.connect() as connect:
             connect.execute(sql)
         print("删除数据完成。")
+        print(df)
         df.to_sql(self.etf_info_table_name, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
         print("存储数据完成")
 
