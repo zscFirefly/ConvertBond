@@ -12,7 +12,7 @@ import requests
 import pandas as pd
 import datetime
 import time
-import talib
+# import talib
 import numpy as np
 pd.set_option('expand_frame_repr', False)
 
@@ -46,6 +46,17 @@ class ScriptETF():
 
         return finish_data
 
+    def util_quote_to_df(self,debt_json):
+        ## 将获取下来的数据由json转化为dataframe
+        finish_data = pd.DataFrame()
+        # print(debt_json)
+        for debt in debt_json:
+            # debt['etf_types'] = str(debt['etf_types'])
+            finish_data = pd.concat([finish_data,pd.DataFrame(debt,index=[1])],axis=0)
+
+        return finish_data
+
+
     def change_timestamp2date(self,ts_ms):
         '''将时间戳转化为日期'''
         ts_sec = ts_ms / 1000  # 转换为秒
@@ -71,6 +82,26 @@ class ScriptETF():
         df = self.util_to_df(etf_list)
         return df
 
+    def get_quote_code(self):
+        '''获取所有etf列表信息'''
+        url = 'https://stock.xueqiu.com/v5/stock/screener/quote/list.json'
+        params = (
+            ('page', '1'), # page页数
+            ('size', '6000'), #size 每页长度，设置5000则可以一口气爬下所有
+            ('order', 'desc'),
+            ('orderby', 'percent'),
+            ('order_by', 'percent'),
+            ('market', 'CN'),
+            ('type', 'sh_sz'),
+            ('_', '1591462668100'),
+        )
+
+        response = requests.get(url = url,params=params,cookies=self.script_etf_config.get_cookies(),headers=self.script_etf_config.get_headers())
+        print(response.json())
+        quote_list = response.json()['data']['list']
+        df = self.util_quote_to_df(quote_list)
+        return df
+
 
     def get_etf_detail(self,code):
         '''获取所有etf的k线图数据'''
@@ -80,11 +111,12 @@ class ScriptETF():
             'begin': str(int(time.time() * 1000)), 
             'period': 'day', 
             'type': 'before', 
-            'count': '-4000', 
+            'count': '-1000', 
             'indicator': 'kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance,macd'
         } 
 
         response = requests.get(url = url,params=data,cookies=self.script_etf_config.get_cookies(),headers=self.script_etf_config.get_headers())
+        print(response.json())
         res_column = response.json()['data']['column']
         res_items = response.json()['data']['item']
         json_list = []
@@ -192,7 +224,7 @@ if __name__ == '__main__':
     se = ScriptETF()
     se.set_script_etf_config(sc)
     se.run_daily()
-    # df = se.run_history()
+
     # se.analysis_etf()
     # df = se.get_condition_data('2023-04-01')
 
