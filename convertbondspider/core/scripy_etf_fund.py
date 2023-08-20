@@ -102,6 +102,21 @@ class ScriptETF():
         df = self.util_quote_to_df(quote_list)
         return df
 
+    def get_quote_info(self,code):
+        '''获取所有etf列表信息'''
+        url = 'https://stock.xueqiu.com/v5/stock/quote.json'
+        params = {
+            'symbol': code,
+            'extend': 'detail',
+        }
+
+        response = requests.get(url = url,params=params,cookies=self.script_etf_config.get_cookies(),headers=self.script_etf_config.get_headers())
+        # print(response.json())
+        quote_info = response.json()['data']['quote']
+        # print(quote_info)
+        df = pd.DataFrame(quote_info,index=[0])
+        return df
+
 
     def get_etf_detail(self,code):
         '''获取所有etf的k线图数据'''

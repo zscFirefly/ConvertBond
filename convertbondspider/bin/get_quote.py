@@ -43,3 +43,7 @@ if __name__ == '__main__':
         df['code'] = code
         df.to_sql(tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
 
+
+        df2 = se.get_quote_info(code)
+        df2['code'] = code
+        df2.to_sql('convertbond_publish_quote_info', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
