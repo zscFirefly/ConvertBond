@@ -83,27 +83,57 @@ class ScriptETF():
         return df
 
     def get_quote_code(self):
-        '''获取所有etf列表信息'''
+        '''获取当日股票列表信息'''
+
+        ## 正序获取（因为最多只能5000条，超过5000条就报错）
         url = 'https://stock.xueqiu.com/v5/stock/screener/quote/list.json'
         params = (
             ('page', '1'), # page页数
-            ('size', '6000'), #size 每页长度，设置5000则可以一口气爬下所有
-            ('order', 'desc'),
-            ('orderby', 'percent'),
+            ('size', '5000'), #size 每页长度，设置5000则可以一口气爬下所有
+            ('order', 'asc'),
             ('order_by', 'percent'),
-            ('market', 'CN'),
             ('type', 'sh_sz'),
-            ('_', '1591462668100'),
+            # ('_', '1591462668100'),
+            # ('market', 'CN'),
+            # ('orderby', 'percent'),
+
         )
 
         response = requests.get(url = url,params=params,cookies=self.script_etf_config.get_cookies(),headers=self.script_etf_config.get_headers())
-        print(response.json())
         quote_list = response.json()['data']['list']
-        df = self.util_quote_to_df(quote_list)
-        return df
+        df_asc = self.util_quote_to_df(quote_list)
+        print(df_asc)
+        print("正序完成....")
+
+        ## 倒序获取
+        params = (
+            ('page', '1'), # page页数
+            ('size', '5000'), #size 每页长度，设置5000则可以一口气爬下所有
+            ('order', 'desc'),
+            ('order_by', 'percent'),
+            ('type', 'sh_sz'),
+
+        )
+        response = requests.get(url = url,params=params,cookies=self.script_etf_config.get_cookies(),headers=self.script_etf_config.get_headers())
+        quote_list = response.json()['data']['list']
+        df_desc = self.util_quote_to_df(quote_list)
+        print(df_desc)
+        print("倒序完成....")
+
+
+        df = pd.DataFrame()
+        df= pd.concat([df_asc,df_desc],axis=0)
+
+        df.drop_duplicates(subset=['symbol'],keep='first',inplace=True)
+        print("去重完成....")
+        print(df.columns)
+
+        return df[['symbol', 'net_profit_cagr', 'north_net_inflow', 'ps', 'type','percent', 'has_follow', 'tick_size', 'pb_ttm', 'float_shares','current', 'amplitude', 'pcf', 'current_year_percent','float_market_capital', 'north_net_inflow_time', 'market_capital','dividend_yield', 'lot_size', 'roe_ttm', 'total_percent', 'percent5m','income_cagr', 'amount', 'chg', 'issue_date_ts', 'eps','main_net_inflows', 'volume', 'volume_ratio', 'pb', 'followers','turnover_rate', 'mapping_quote_current', 'first_percent', 'name','pe_ttm', 'dual_counter_mapping_symbol', 'total_shares','limitup_days']]
+
+
 
     def get_quote_info(self,code):
-        '''获取所有etf列表信息'''
+        '''获取所有股票基本信息'''
         url = 'https://stock.xueqiu.com/v5/stock/quote.json'
         params = {
             'symbol': code,
@@ -149,6 +179,32 @@ class ScriptETF():
         print(sql)
         data = pd.read_sql(sql=sql, con=sqlExecute.engine)
         return data
+
+
+
+    def run_stock_daily(self):
+        df = self.get_quote_code()
+        date = datetime.now().strftime("%Y-%m-%d")
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%s")
+        df['timestamp'] = timestamp
+        df['date'] = date
+
+        tablename = 'stock_ods_stock_date'
+        print("开始删除%s的数据....."%(date))
+        sql = "delete from %s where `date` = '%s' " % (tablename,date)
+        with sqlExecute.engine.connect() as connect:
+            connect.execute(sql)
+        df.to_sql(tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+
+        wash_df = df[['symbol','type','name','percent','current','amount','market_capital','float_market_capital','turnover_rate','chg','volume_ratio','total_shares','date']]
+        tablename = 'stock_dwd_stock_date'
+        print("开始删除%s的数据....."%(date))
+        sql = "delete from %s where `date` = '%s' " % (tablename,date)
+        with sqlExecute.engine.connect() as connect:
+            connect.execute(sql)
+        wash_df.to_sql(tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+        print("数据存储完成")
+
 
 
     def run_daily(self):
@@ -238,7 +294,12 @@ if __name__ == '__main__':
     sc = ScriptETFConfig() # 实例化配置对象
     se = ScriptETF()
     se.set_script_etf_config(sc)
-    se.run_daily()
+    # se.run_daily()
+
+    se.run_stock_daily()
+    # print(df)
+
+
 
     # se.analysis_etf()
     # df = se.get_condition_data('2023-04-01')
