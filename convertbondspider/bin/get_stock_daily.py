@@ -20,6 +20,16 @@ from conf.wechat_config import WeChatConfig
 
 
 if __name__ == '__main__':
+
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
+
+    # 判断是否为交易日，如果不为交易日，则不必执行
+    ca = Calender(date)
+    is_work = ca.get_is_work()
+    if is_work == 0:
+        print("今日%s，非交易日" % (date))
+        exit()
+
     print("开始执行：%s" % (datetime.datetime.now().strftime('%Y-%m-%d')))
     sc = ScriptETFConfig() # 实例化配置对象
     se = ScriptETF()
