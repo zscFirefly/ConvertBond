@@ -32,18 +32,29 @@ if __name__ == '__main__':
     se = ScriptETF()
     se.set_script_etf_config(sc)
 
-    tablename = 'convertbond_publish_quote_data'
 
-    code_list = get_quote_data()
-    print(code_list)
+    se.get_quote_data()
 
-    for code in code_list:
-        print("get code " + str(code))
-        df = se.get_etf_detail(code)
-        df['code'] = code
-        df.to_sql(tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+    # tablename = 'convertbond_publish_quote_data'
+
+    # code_list = get_quote_data()
+    # print(code_list)
+
+    # for code in code_list:
+    #     print("get code " + str(code))
+    #     df = se.get_etf_detail(code)
+    #     df['code'] = code
+    #     df.to_sql(tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
 
 
-        df2 = se.get_quote_info(code)
-        df2['code'] = code
-        df2.to_sql('convertbond_publish_quote_info', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+    #     df2 = se.get_quote_info(code)
+    #     df2['code'] = code
+    #     df2.to_sql('convertbond_publish_quote_info', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+
+
+    ## 获取沪深300指数
+    code = 'SH000300'
+    df = se.get_etf_detail(code)
+    df['code'] = code
+    df.to_sql('tmp_sh_300', sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+
