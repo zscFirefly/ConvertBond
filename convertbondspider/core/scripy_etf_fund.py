@@ -24,6 +24,7 @@ from common.calender import Calender
 from datetime import datetime, timedelta
 from common.wechat import WeChat
 from conf.wechat_config import WeChatConfig
+from sqlalchemy import text
 
 
 class ScriptETF():
@@ -193,7 +194,7 @@ class ScriptETF():
         print("开始删除%s的数据....."%(date))
         sql = "delete from %s where `date` = '%s' " % (tablename,date)
         with sqlExecute.engine.connect() as connect:
-            connect.execute(sql)
+            connect.execute(text(sql))
         df.to_sql(tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
 
         wash_df = df[['symbol','type','name','percent','current','amount','market_capital','float_market_capital','turnover_rate','chg','volume_ratio','total_shares','date']]
@@ -201,7 +202,7 @@ class ScriptETF():
         print("开始删除%s的数据....."%(date))
         sql = "delete from %s where `date` = '%s' " % (tablename,date)
         with sqlExecute.engine.connect() as connect:
-            connect.execute(sql)
+            connect.execute(text(sql))
         wash_df.to_sql(tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
         print("数据存储完成")
 
@@ -221,7 +222,7 @@ class ScriptETF():
         print("开始删除%s的数据....."%(ts_list[1]))
         sql = "delete from %s where `timestamp` = '%s' " % (self.etf_info_table_name,ts_list[1])
         with sqlExecute.engine.connect() as connect:
-            connect.execute(sql)
+            connect.execute(text(sql))
         print("删除数据完成。")
         print(df)
         df.to_sql(self.etf_info_table_name, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
@@ -244,7 +245,7 @@ class ScriptETF():
         print("开始删除%s的数据....."%(ts_list[1]))
         sql = "delete from %s where `timestamp` = '%s' " % (self.etf_info_table_name,ts_list[1])
         with sqlExecute.engine.connect() as connect:
-            connect.execute(sql)
+            connect.execute(text(sql))
         print("删除数据完成。") 
 
         df.to_sql(self.etf_info_table_name, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
