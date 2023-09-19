@@ -190,20 +190,21 @@ class ScriptETF():
         df['timestamp'] = timestamp
         df['date'] = date
 
-        tablename = 'stock_ods_stock_date'
+        ods_tablename = 'stock_ods_stock_date'
         print("开始删除%s的数据....."%(date))
-        sql = "delete from %s where `date` = '%s' " % (tablename,date)
+        sql = "delete from %s where `date` = '%s' " % (ods_tablename,date)
         with sqlExecute.engine.connect() as connect:
+            print(text(sql))
             connect.execute(text(sql))
-        df.to_sql(tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+        df.to_sql(ods_tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
 
         wash_df = df[['symbol','type','name','percent','current','amount','market_capital','float_market_capital','turnover_rate','chg','volume_ratio','total_shares','date']]
-        tablename = 'stock_dwd_stock_date'
+        dwd_tablename = 'stock_dwd_stock_date'
         print("开始删除%s的数据....."%(date))
-        sql = "delete from %s where `date` = '%s' " % (tablename,date)
+        sql = "delete from %s where `date` = '%s' " % (dwd_tablename,date)
         with sqlExecute.engine.connect() as connect:
             connect.execute(text(sql))
-        wash_df.to_sql(tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+        wash_df.to_sql(dwd_tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
         print("数据存储完成")
 
 

@@ -21,4 +21,5 @@ class sqlExecute():
     }
     engine = create_engine(
         'mysql+pymysql://%(user)s:%(password)s@%(host)s:%(port)d/%(database)s?charset=utf8' % db_info
+        ,encoding='utf-8'
     )

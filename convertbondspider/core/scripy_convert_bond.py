@@ -10,7 +10,7 @@ from core.script_config import *
 from core.script_config import ScriptConfig
 from core.user_login import *
 from common.calender import Calender
-
+from sqlalchemy import text
 
 class ScriptBase():
     '''爬虫基础类'''
@@ -81,7 +81,7 @@ class ConvertBondDaily(ScriptBase):
         print("开始删除数据.....")
         sql = "delete from convert_bond_daily where `date` = '%s' " % (date)
         with sqlExecute.engine.connect() as connect:
-            connect.execute(sql)
+            connect.execute(text(sql))
         # sqlExecute.executeSQL(sql)
 
         print("删除数据成功.")
