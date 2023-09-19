@@ -3,6 +3,7 @@ sys.path.append("..")
 import pandas as pd 
 
 from conf.sql_config import *
+from sqlalchemy import text
 
 class SearchData():
     '''sql查询类'''
@@ -10,7 +11,8 @@ class SearchData():
         self.sql = sql
 
     def read_data(self):
-        data = pd.read_sql(self.sql, sqlExecute.engine)
+        # data = pd.read_sql(text(self.sql), sqlExecute.engine)
+        data = pd.DataFrame(sqlExecute.engine.connect().execute(text(self.sql)))
         return data
 
     def write_data(self,dataframe,tablename):
