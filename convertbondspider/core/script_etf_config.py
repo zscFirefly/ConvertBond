@@ -39,8 +39,8 @@ class ScriptETFConfig():
         option.add_argument('--disable-gpu')
         # option.add_argument("window-size=1024,768")
         option.add_argument("--no-sandbox")
-        s = Service(executable_path='/Users/zhengshuocong/Documents/component/chromedriver')#selenium4中，把executable_path重构到了service中，如果系统变量中已有driver路径，则可以省略此行
-        # s = Service(executable_path='/opt/chromedriver/chromedriver-linux64/chromedriver')#selenium4中，把executable_path重构到了service中，如果系统变量中已有driver路径，则可以省略此行
+        # s = Service(executable_path='/Users/zhengshuocong/Documents/component/chromedriver')#selenium4中，把executable_path重构到了service中，如果系统变量中已有driver路径，则可以省略此行
+        s = Service(executable_path='/opt/chromedriver/chromedriver-linux64/chromedriver')#selenium4中，把executable_path重构到了service中，如果系统变量中已有driver路径，则可以省略此行
         driver = webdriver.Chrome(service=s,options=option)
         driver.get("https://www.xueqiu.com/")
         cookies = driver.get_cookies()
