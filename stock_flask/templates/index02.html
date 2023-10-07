@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>可转债信息查询</title>
+	<style>
+		h1 {
+			font-size: 32px;
+			color: #333;
+			text-align: center;
+			margin-top: 50px;
+		}
+		form {
+			width: 60%;
+			margin: 0 auto;
+			margin-top: 50px;
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
+		}
+		input[type="text"] {
+			padding: 10px;
+			font-size: 18px;
+			border-radius: 5px;
+			border: 1px solid #ccc;
+			flex: 1;
+			margin-right: 10px;
+			margin-bottom: 10px;
+		}
+		input[type="submit"] {
+			padding: 10px;
+			font-size: 18px;
+			border-radius: 5px;
+			background-color: #007bff;
+			color: #fff;
+			border: none;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+			margin-bottom: 10px;
+			flex-basis: 100%;
+		}
+		input[type="submit"]:hover {
+			background-color: #0069d9;
+		}
+	</style>
+</head>
+<body>
+	<h1>输入可转债代码</h1>
+	<form action="/search" method="post">
+		<input type="text" name="bond_id" placeholder="请输入可转债代码，例如：128114">
+		<input type="submit" value="查询">
+	</form>
+	<form action="/double_low" method="post">
+		<input type="submit" value="查询昨日双低可转债">
+	</form>
+</body>
+</html>

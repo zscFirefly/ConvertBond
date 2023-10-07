@@ -7,6 +7,11 @@ import json
 
 from conf.sql_config import *
 
+from core.monitor import *
+from common.calender import Calender
+from common.search_data import SearchData
+from common.wechat import WeChat
+from conf.wechat_config import WeChatConfig
 
 class FeiShu():
     '''监控类'''
@@ -42,7 +47,22 @@ class FeiShu():
                 "text": text
             }
         }
+        print(self.config.user_id)
      
         data = json.dumps(req_body) # 转化为str
         req = requests.post(url=url, data=data, headers=headers)
         print(req.json())
+
+
+if __name__ == '__main__':
+    # main()
+
+
+    fc = FeishuConfig()
+    fc.set_user_id('41a6a2ba')
+    fc.set_app_id('cli_a3ee5eca19b9900d')
+    fc.set_app_secret('sSjQawQabi0sdODSiCxoggeMLhNEWnq7')
+
+    # 构造飞书-监控实例
+    fs = FeiShu(fc)
+    fs.send_message("hello world") # 发送消息
