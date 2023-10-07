@@ -12,7 +12,7 @@ import requests
 import pandas as pd
 import datetime
 import time
-import talib
+# import talib
 import numpy as np
 pd.set_option('expand_frame_repr', False)
 
