@@ -87,3 +87,44 @@ git config --global --unset https.proxy # 取消git代理
 git config --global http.postBuffer 50M # 取消git带宽
 git config core.ignorecase false # 取消大小写敏感
 
+
+
+## 部署相关
+1. 安装git
+```
+yum install git
+```
+2. 拉代码，并下载python包。
+```
+pip3 install -r requirements.txt
+```
+3. 安装chrome及依赖
+``` shell
+yum install redhat-lsb*
+yum -y install libXss*
+yum install libappindicator*
+yum -y install liberation-fonts
+yum -y install libvulkan*
+## 安装chrome
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+sudo rpm -ivh google-chrome-stable_current_x86_64.rpm
+```
+4. 修改配置
+
+
+5. 拉取mysql镜像并挂载。
+```shell
+docker run \
+--name mysqlsmart \
+-e MYSQL_ROOT_PASSWORD=888888 \
+-p 3307:3306 \
+-v /smartdata/log:/var/log/mysql \
+-v /smartdata/data:/var/lib/mysql \
+-v /smartdata/conf:/etc/mysql \
+-d ${containID}
+```
+6. navicat链接并创建数据库，传输数据
+7. 配置crontab: chattr -ai /var/spool/cron/
+
+
+
