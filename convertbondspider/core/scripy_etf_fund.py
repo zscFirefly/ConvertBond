@@ -149,7 +149,7 @@ class ScriptETF():
         return df[['current_ext','symbol','volume_ext','high52w','delayed','type','tick_size','float_shares','limit_down','no_profit','high','float_market_capital','timestamp_ext','lot_size','lock_set','weighted_voting_rights','chg','eps','last_close','profit_four','volume','volume_ratio','profit_forecast','turnover_rate','low52w','name','exchange','pe_forecast','total_shares','status','code','goodwill_in_net_assets','avg_price','percent','weighted_voting_rights_desc','amplitude','current','current_year_percent','issue_date','sub_type','low','is_registration_desc','no_profit_desc','market_capital','dividend','dividend_yield','currency','navps','profit','timestamp','pe_lyr','amount','pledge_ratio','traded_amount_ext','is_registration','pb','limit_up','pe_ttm','time','open']]
 
 
-    def get_etf_detail(self,code):
+    def get_stock_history(self,code):
         '''获取所有etf的k线图数据'''
         url = "https://stock.xueqiu.com/v5/stock/chart/kline.json?"
         data = {
@@ -157,12 +157,12 @@ class ScriptETF():
             'begin': str(int(time.time() * 1000)), 
             'period': 'day', 
             'type': 'before', 
-            'count': '-1000', 
+            'count': '-5000', 
             'indicator': 'kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance,macd'
         } 
 
         response = requests.get(url = url,params=data,cookies=self.script_etf_config.get_cookies(),headers=self.script_etf_config.get_headers())
-        print(response.json())
+        # print(response.json())
         res_column = response.json()['data']['column']
         res_items = response.json()['data']['item']
         json_list = []
@@ -181,6 +181,21 @@ class ScriptETF():
         data = pd.read_sql(sql=sql, con=sqlExecute.engine)
         return data
 
+
+
+    def run_stock_history(self,code):
+        df = self.get_stock_history(code)
+        date = datetime.now().strftime("%Y-%m-%d")
+        created_time = datetime.now().strftime("%Y-%m-%d %H:%M:%s")
+        df['code'] = code
+        df['created_time'] = created_time
+        df['date'] = date
+        df['timestamp'] = df['timestamp'].apply(self.change_timestamp2date)
+
+
+        tablename='stock_ods_stock_history'
+        df.to_sql(tablename, sqlExecute.engine, if_exists='append', index=False, chunksize=100)
+        print("数据存储完成")
 
 
     def run_stock_daily(self):
@@ -211,7 +226,7 @@ class ScriptETF():
 
     def run_daily(self):
 
-        df = self.get_etf_code()
+        df = self.get_stock_history()
         df['timestamp'] = df['timestamp'].apply(self.change_timestamp2date)
         ts_list = df['timestamp'].drop_duplicates()
         if len(ts_list) >= 2:
@@ -234,7 +249,7 @@ class ScriptETF():
 
 
     def run_history(self):
-        df = self.get_etf_code()
+        df = self.get_stock_history()
         # print(df.columns)
         df['timestamp'] = df['timestamp'].apply(self.change_timestamp2date)
         ts_list = df['timestamp'].drop_duplicates()
