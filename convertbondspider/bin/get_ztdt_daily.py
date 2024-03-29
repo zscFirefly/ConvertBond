@@ -72,14 +72,18 @@ def get_down10per_stock(current_date):
 
 def main():
     current_date = datetime.now().strftime('%Y%m%d')
-    current_date='20240319'
+
+
+    # date = datetime.datetime.now().strftime("%Y-%m-%d")
+    # 判断是否为交易日，如果不为交易日，则不必执行
+    ca = Calender(date)
+    is_work = ca.get_is_work()
+    if is_work == 0:
+        print("今日%s，非交易日" % (date))
+        exit()
 
     get_up10per_stock(current_date)
     get_down10per_stock(current_date)
-
-    # date = datetime.datetime.now().strftime("%Y-%m-%d")
-
-    # 判断是否为交易日，如果不为交易日，则不必执行
 
 
 
