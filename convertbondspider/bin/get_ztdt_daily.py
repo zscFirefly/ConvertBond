@@ -57,7 +57,6 @@ def get_down10per_stock(current_date):
     df = pd.DataFrame(dt_pool)
     df = df.rename(columns={'fba':'bang_amount','tshare':'total_market_capital','hs':'change_rate','c':'code','m':'is_first_zt','zdp':'percent','n':'name','lbc':'consist_count','zbc':'zhaban_count','fbt':'bang_amount','fbt':'first_bang_time','lbt':'last_bang_time','ltsz':'float_market_capital','fund':'bang_amount','hybk':'industry','p':'price','oc':'open_count','days':'consist_days'})
     # print(df)
-datetime
     now_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     date = datetime.now().strftime('%Y-%m-%d')
     df['data_date'] = current_date
