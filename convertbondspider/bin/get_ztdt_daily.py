@@ -72,9 +72,7 @@ def get_down10per_stock(current_date):
 
 def main():
     current_date = datetime.now().strftime('%Y%m%d')
-
-
-    # date = datetime.datetime.now().strftime("%Y-%m-%d")
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
     # 判断是否为交易日，如果不为交易日，则不必执行
     ca = Calender(date)
     is_work = ca.get_is_work()
