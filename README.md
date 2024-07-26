@@ -111,7 +111,7 @@ sudo rpm -ivh google-chrome-stable_current_x86_64.rpm
 ```
 4. 修改配置
 
-
++++++++
 5. 拉取mysql镜像并挂载。
 ```shell
 docker run \
